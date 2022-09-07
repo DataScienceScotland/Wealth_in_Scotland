@@ -1,0 +1,102 @@
+---
+title: "Wealth in Scotland 2006-2020"
+lang: "en"
+description: "Official Statistics and analysis relating to household wealth, assets and debt, including property wealth and private pension wealth, and wealth inequality in Scotland."
+output:
+  bookdown::html_document2:
+    toc: yes
+    toc_depth: 3
+    toc_float:
+      collapsed: yes
+      smooth_scroll: no
+
+params:
+  pub_day: "18 February 2022"
+  data_period: "2018-2020"
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE
+)
+
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+
+```
+
+```{r load_packages_and_data}
+
+library(tidyverse)
+library(Hmisc)
+library(analysistools)
+library(scales)
+library(kableExtra)
+library(htmltools)
+library(ggiraph)
+library(xml2)
+
+source("R/00_colours.R")
+source("R/00_functions.R")
+
+charts1 <- readRDS("data/charts1.rds")
+charts2 <- readRDS("data/charts2.rds")
+charts3 <- readRDS("data/charts3.rds")
+charts4 <- readRDS("data/charts4.rds")
+charts5 <- readRDS("data/charts5.rds")
+tables1 <- readRDS("data/tables1.rds")
+tables2 <- readRDS("data/tables2.rds")
+tables3 <- readRDS("data/tables3.rds")
+tables4 <- readRDS("data/tables4.rds")
+tables5 <- readRDS("data/tables5.rds")
+
+hhld <- readRDS("data/tidy_household.rds")
+
+# Start chart numbering
+fign <- 0
+
+```
+
+```{r load_theme}
+
+# Theme ------------------------------------------------------------------------
+
+mytheme <- theme_grey() +
+  theme(text = element_text(colour = SGgrey, size = 14),
+        line = element_line(colour = SGgrey,
+                            linetype = 1,
+                            lineend = 2,
+                            size = 0.5),
+
+        plot.title = element_text(hjust = 0, colour = SGgrey, size = 12),
+        plot.caption = element_text(hjust = 1),
+        plot.title.position = "plot",
+
+        legend.position = "top",
+        legend.title = element_blank(),
+        legend.key = element_blank(),
+
+        panel.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+
+        axis.line.x = element_line(),
+        axis.ticks.length = unit(2, "pt"),
+        axis.ticks.y = element_blank(),
+
+        axis.title = element_blank())
+
+theme_set(mytheme)
+
+chapters <- c("_chapters/_chapter00.Rmd", 
+              "_chapters/_chapter01.Rmd", 
+              "_chapters/_chapter02.Rmd",
+              "_chapters/_chapter03.Rmd",
+              "_chapters/_chapter04.Rmd",
+              "_chapters/_chapter05.Rmd",
+              "_chapters/_chapter06.Rmd")
+```
+
+```{r load_chapters, child = chapters}
+```

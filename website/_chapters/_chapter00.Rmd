@@ -1,0 +1,85 @@
+**A Scottish Government Official Statistics publication**
+
+Published on `r params$pub_day`
+
+<button onclick="location.href='tables2022.xlsx'" type="button" class = "btn noprint">
+  Download tables (XLSX, 900 KB)
+</button>
+
+<button onclick="location.href='tables2022.ods'" type="button" class = "btn noprint">
+  Download tables (ODS, 100 KB)
+</button>
+
+<button onclick = "window.print();" class = "btn noprint" >
+  Print or save as PDF
+</button>
+
+<button onclick="location.href='#contact'" type="button" class = "btn noprint">
+  Contact
+</button>
+
+Personal wealth is a key component of people’s standard of living. People use their wealth for a range of purposes, for example: 
+
+- as a source of finance to improve current or future living standards
+- to invest in opportunities such as education or entrepreneurial activities
+- to provide a buffer for emergencies such as unemployment or illness. 
+
+Many people will build wealth throughout their working lives in preparation for retirement. Yet, households with low income and low starting wealth will find this more difficult. 
+
+This report shows how wealthy Scottish households are. It also shows which kinds of households are a lot wealthier than others. And it shows which kinds of households have little savings for emergencies, or even unmanageable debt.
+
+The latest data for this report is from April `r str_split(params$data_period, "-")[[1]][1]` to March `r str_split(params$data_period, "-")[[1]][2]`. This was before the first UK-wide lockdown due to the coronavirus (COVID-19) pandemic.  So these statistics do not yet tell us anything about the impact of the pandemic on wealth and debt.
+
+## Key points
+
+`r message("Pre-pandemic wealth inequality remained high")`
+
+```{r}
+
+fig1 <- as.numeric(str_remove_all(tables2$table_2$median[["10"]], "[£,]"))
+fig1 <- paste0("£", round2(fig1/1000000, 1))
+
+fig2 <- tables2$table_1$median %>% tail(1L) %>% select(Income) %>% pull()
+fig3 <- tables2$table_1$median %>% tail(1L) %>% select(Wealth) %>% pull()
+
+# round
+fig2 <- percent2(as.numeric(str_remove(fig2, "%"))/100, 2)
+fig3 <- percent2(as.numeric(str_remove(fig3, "%"))/100, 2)
+
+```
+
+According to the latest data from just before the pandemic, a typical household in Scotland had `r tables1$table_1$median[[params$data_period]]` in total wealth, similar to previous years. A typical household in the wealthiest 10% of households had `r fig1` million in total wealth, whereas a typical household in the least wealthy 10% of households had `r tables2$table_2$median[["1"]]`. The least wealthy households rarely own property or have any private pension savings. Their wealth is mainly made up of the value of their possessions such as cars, furniture and clothing.
+
+Wealth inequality was more severe than income inequality: the 2% of households with the highest incomes had `r fig2` of all income, while the wealthiest 2% of households had `r fig3` of all wealth.
+
+Households that tend to be wealthier than others are higher income households, pensioner couples, and home owners. In contrast, households with below average wealth tend to be low income households, lone parent and single working-age adult households, and those who lived in rented housing.
+
+Three out of ten households had insufficient savings to keep them above the poverty line for a month should they lose their income. Four per cent of households were in unmanageable debt. A third of households did not own any property, and a third of adults had no private pension savings.
+
+## What you need to know
+
+### Household wealth
+
+Household wealth (total wealth) is made up of [physical wealth](#physical-wealth-definition), [financial wealth](#financial-wealth-definition), [property wealth](#property-wealth-definition) and [pension wealth](#pension-wealth-definition) of all household members. In short, physical wealth is the value of your belongings, financial wealth is savings, investments, and debt, property wealth is the self-reported value of your owned home and other property, and pension wealth is an estimate of the value of your private pensions, such as occupational and personal pensions.
+
+We adjusted all wealth estimates for [inflation](#inflation-adjustment-definition).
+
+### Survey data
+
+The analysis in this report is based on data from the Wealth and Assets Survey (WAS). This survey measures the economic well-being of households in Great Britain. `r abbr("WAS", "Wealth and Assets Survey")` is managed by the Office for National Statistics (ONS).
+
+`r abbr("WAS", "Wealth and Assets Survey")` is a sample survey and any numbers shown here are estimates only and could be slightly higher or lower if we interviewed a different sample of the population. Therefore, small changes over time, or differences between groups may not be real in the population. Differences or trends are more likely to be real if they are consistent over time.
+
+The survey has a large sample size and almost complete coverage of Great Britain. The sample of private households in Scotland however excludes households north of the Caledonian Canal and the Scottish islands. Any estimates may therefore not necessarily be representative of households in these areas. 
+
+We do not produce estimates of numbers of people or households in Scotland, who, for example, own a home. Instead, we provide likelihoods (for example, of owning a home) and average amounts (of property wealth, for example).
+
+### Describing trends
+
+Our charts show trends and differences between groups of households or people. Some trends and differences are real. They reflect trends and differences in the general population. Others occur just by chance in this particular survey sample and do not reflect the general population.
+
+We only report on trends that we believe to be real, based on the following criteria: 
+
+- a difference between groups is consistent over time
+- the groups are based on large sample sizes
+- estimates don't fluctuate too much. 

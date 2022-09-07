@@ -1,0 +1,204 @@
+## Total wealth
+
+```{r}
+id <- 0
+fign <- 0
+```
+
+This section gives an overview over how much personal wealth households have, how that has changed over time, what types of wealth there are and how their importance changes over people's life courses.
+
+```{r} 
+
+keymessage <- "Median wealth broadly stable"
+message(keymessage)
+
+```
+
+```{r chart1_1}
+
+subtitle <- "Median (inflation-adjusted) household wealth, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows median household wealth over time. In ", params$data_period, ", a typical household had ", tables1$table_1$median[[params$data_period]], " of total wealth. Median wealth had not changed much since 2006-2008, when data collection began.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts1[[paste0("chart_", id)]], 
+            description = description,
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables1[[paste0("table_", id)]]$median,
+                            id = paste0("table-", fign, "a"),
+                            caption = paste0("Table ", fign, "a: ", subtitle),
+                            source = "Source: Wealth and Assets Survey",
+                            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables1[[paste0("table_", id)]]$sample,
+                            id = paste0("table-", fign, "b"),
+                            caption = paste0("Table ", fign, "b: Sample sizes, Scotland"),
+                            source = "Source: Wealth and Assets Survey",
+                            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2))
+
+```
+
+
+### Types of wealth {.tabset}
+
+Total household wealth is made up of physical wealth, financial wealth, property wealth and pension wealth of all household members.
+
+#### Wealth types
+
+```{r}
+
+keymessage <- "The average household's wealth is mainly held in property and pensions"
+message(keymessage)
+
+fig1 <- tables1$table_2$median$Median[4]
+fig2 <- tables1$table_2$median$Median[3]
+fig3 <- tables1$table_2$median$Median[2]
+fig4 <- tables1$table_2$median$Median[1]
+
+
+# Remove zero property and zero pension wealth cases
+
+fig5 <- hhld %>%
+  filter(gor == "Scotland",
+         wavenum == max(wavenum),
+         prowlth != 0) %>%
+  summarise(Property = wtd.quantile(prowlth, probs = 0.5, weights = wgt)) %>%
+  mutate(Property = paste0("£", comma2(roundGBP(Property)))) %>%
+  pull()
+
+fig6 <- hhld %>%
+  filter(gor == "Scotland",
+         wavenum == max(wavenum),
+         penwlth != 0) %>%
+  summarise(Pension = wtd.quantile(penwlth, probs = 0.5, weights = wgt)) %>%
+  mutate(Pension = paste0("£", comma2(roundGBP(Pension)))) %>%
+  pull()
+
+```
+
+```{r chart1_2}
+
+subtitle <- paste0("Median household wealth by type of wealth, Scotland ", params$data_period)
+description <- paste0("Figure ", fign + 1, " shows how much wealth a typical household had in the latest period for each type of wealth. Typical pension wealth was ", fig1, ", property wealth ", fig2, ", physical wealth ", fig3, ", and financial wealth ", fig4, ".
+
+Note that this analysis includes all households, even those that had no property or pension wealth. If we exclude those households, a typical household with (some) property had ", fig5, " in property wealth, and a typical household with (some) pension wealth had ", fig6, " in pension wealth in the latest period.")
+
+id <- id + 1
+fign <- fign + 1
+ 
+interactive(charts1[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle,
+            height = 2.5)
+
+table1 <- datatable(data = tables1[[paste0("table_", id)]]$median,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+  
+table2 <- datatable(data = tables1[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "b: Sample sizes, Scotland ", params$data_period),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2))
+
+```
+
+#### Trends
+
+```{r}
+keymessage <- "Pension wealth no longer rising, little change for other wealth types"
+message(keymessage)
+```
+
+
+```{r chart1_3}
+
+subtitle <- "Median (inflation-adjusted) household wealth by type of wealth (includes all households, with or without each type of wealth), Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows median household wealth trends by type of wealth. Later chapters on pension wealth and property wealth will also show trends, but some estimates will differ for two reasons:
+
+- Figure ", fign + 1,", like Figure ", fign, ", includes all households when calculating the median, whether or not they have each type of wealth. The later chapters on property and pension wealth exclude those with no property wealth, or pension wealth.
+- In Figure ", fign + 1, ", we show household pension wealth. This is the combined pension wealth of all household members. In the pension chapter, we look at individuals' pension wealth.")
+
+id <- id + 1
+fign <- fign + 1
+ 
+interactive(charts1[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables1[[paste0("table_", id)]]$median,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+  
+table2 <- datatable(data = tables1[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "b: Sample sizes, Scotland ", params$data_period),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2))
+
+```
+
+
+### Life stages
+
+It is important to note that wealth amounts vary a lot by age. Younger households are less likely to have much or even any pension or property wealth, and most of their wealth is made up of the value of their belongings (physical wealth).
+
+In general, people start building up wealth once they start receiving a salary, buy some goods, maybe save some money, and pay into a private pension scheme such as a workplace pension. Many buy a home, and through paying off their mortgage they build property wealth. On retirement, pension wealth gets drawn upon and used up, while some people also downsize their homes and reduce their property wealth.
+
+```{r}
+keymessage <- "Wealth grows over the course of people's working life and then declines"
+message(keymessage)
+```
+
+```{r chart1_4}
+
+subtitle <- paste0("Median household wealth by type of wealth and age of household head, Scotland ", params$data_period)
+
+description <- paste0("Figure ", fign + 1, " shows how much wealth of each type a typical household had for different age groups. A typical young household ([household head](#household-head-definition) aged 16-34) has mostly physical wealth, and no or only little financial, property and pension wealth. While financial and physical wealth differ little for different ages, property and pension wealth differ a lot and make up most of the wealth of households with heads aged 35 and older. 
+
+This reflects what happens over people's life time, with many young households who have little wealth today expected to turn into wealthy households in the future as they age and accumulate wealth.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts1[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            subtitle = subtitle,
+            description = description,
+        height = 8)
+
+table1 <- datatable(data = tables1[[paste0("table_", id)]]$median,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+  
+table2 <- datatable(data = tables1[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "b: Sample sizes, Scotland ", params$data_period),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2))
+
+```
+
+
+

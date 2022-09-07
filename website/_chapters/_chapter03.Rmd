@@ -1,0 +1,1568 @@
+## Financial wealth & debt
+
+```{r}
+id <- 0
+fign <- length(tables1) + length(tables2)
+```
+
+Financial wealth (net financial wealth) is calculated as the sum of all financial assets (such as bank accounts, savings accounts, stocks and shares) minus all liabilities (such as overdrafts, loans, credit card debt, and arrears on household bills). Assets also include informal assets, such as money held at home, or borrowing from friends and family.
+
+This chapter describes how financial wealth is distributed across households in Scotland. A section on financial vulnerability identifies the kind of households with little financial wealth, who might struggle in a crisis. And a section on unmanageable debt looks at those households in Scotland at the very bottom end of the financial wealth spectrum. 
+
+We report on financial wealth on a household level.
+
+### How much? {.tabset}
+
+#### Distribution
+
+```{r} 
+
+keymessage <- paste0("The wealthiest households had on average ", tables3$table_1$median[["10"]], " in financial
+wealth, whereas the least wealthy were in debt.")
+message(keymessage)
+
+```
+
+
+```{r chart3_1}
+
+subtitle <- paste0("Median net financial wealth by financial wealth decile, Scotland ",
+                   params$data_period)
+
+description <- paste0("Figure ", fign + 1, " shows how net financial wealth was distributed.
+
+The bar chart splits all households into ten equal-sized groups (called deciles), sorted by financial wealth amount from the least wealthy on the left, to the wealthiest on the right. The height of the bars shows the typical financial wealth amount of each group, or the decile medians.
+
+The households with the highest financial wealth had a lot more compared to those with the least financial wealth, who were actually in debt. A typical household in the top decile had ", tables3$table_1$median[["10"]], " in financial wealth, whereas a typical household in the bottom decile was in debt (they had ", tables3$table_1$median[["1"]], ").
+
+Table ", fign + 1, "b also shows that the financially wealthiest households tended to have older household heads than the least wealthy.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts3[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables3[[paste0("table_", id)]]$median,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables3[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Median age of household head, Scotland ", params$data_period),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+  
+table3 <- datatable(data = tables3[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Sample sizes, Scotland ", params$data_period),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3))
+
+```
+
+#### Trends
+
+```{r}
+keymessage <- "Financial wealth increasing in all deciles"
+message(keymessage)
+
+```
+
+```{r chart3_2}
+
+subtitle <- "Median (inflation-adjusted) net financial wealth by financial wealth decile, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows how median financial wealth in each financial wealth decile changed over time. In ", params$data_period, ", median financial wealth increased slightly in all deciles.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts3[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables3[[paste0("table_", id)]]$median,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables3[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+  
+table3 <- datatable(data = tables3[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3))
+
+```
+
+### Financial vulnerability {.tabset}
+
+Financial vulnerability measures look at whether households have enough savings to cope with a financial shock.
+
+Various measures exist. Here, we look at how long a household's savings would keep them above the poverty line, had they no income. In our [previous reports](#previous-reports), we compared household savings to a measure of essential living costs. 
+
+All measures make assumptions. Our measures assume households lose all income at once and then need to use their savings to replace it. This is an extreme and unlikely scenario for many households. Often, households have many income sources, such as earnings and benefits. 
+Note also that there are many reasons why households may not have access to a lot of cash.  Some people with spare cash decide to increase their mortgage payments, or they invest into a private pension. This means that they might be more resilient than what our measure suggests.
+
+With this in mind, our chosen measure is useful for looking at what sort of households are more or less likely to have some emergency cash, and how this has changed over time.
+
+```{r} 
+
+keymessage <- "More households becoming financially resilient"
+message(keymessage)
+
+```
+
+```{r}
+
+fig1 <- tables3$table_3$share[1, length(tables3$table_3$share)] %>% pull()
+fig2 <- tables3$table_3$incdrop[1, length(tables3$table_3$incdrop)] %>% pull()
+fig3 <- filter(tables3$table_4$rate, Group == "All")[length(tables3$table_4$rate)] %>% pull()
+
+```
+
+```{r chart3_3}
+
+subtitle <- "Share of households whose savings, if replacing all income, would keep them above the poverty line for different lengths of time, Scotland"
+subtitle2 <- "Share of adults who report they would be able to make ends meet for different lengths of time should they lose their main source of income, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows that in recent years, ", fig1, " of households, were they to lose all income, had enough savings to keep them above the poverty line for longer than a year. This had slightly increased from previous periods.
+
+This estimate compares well with how people perceive their financial resilience. When asked directly, ", fig2, " of adults responded that they would be able to make ends meet for over a year should they lose their main source of income (see table ", fign + 1, "c below).
+
+On the other hand, ", fig3, " of households did not have enough savings to keep them above the poverty line for one month.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts3[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables3[[paste0("table_", id)]]$share,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables3[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Sample sizes (households), Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables3[[paste0("table_", id)]]$incdrop,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: ", subtitle2),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables3[[paste0("table_", id)]]$incdrop_sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes (adults), Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+In this section, financially vulnerable households are households with savings which would cover less than one month of income at the poverty line (the bottom two categories in Figure `r fign`).
+
+Note this is a household-level measure, so breakdowns are for household characteristics such as household type and tenure, and individual characteristics of the household head (the person with the highest income).
+
+We include a range of breakdowns below. We see the biggest differences between groups for household type, economic status of the household head, housing tenure, household income and (formal) qualification of the household head. Other breakdowns show smaller, but yet in many cases consistent differences between groups.
+
+Data on religion, sexual orientation, or area deprivation is not available for this analysis.
+
+`r infobox("Some of the breakdowns below may not be based on the full Scottish sample. This is because we excluded a small number of households where the breakdown characteristic was unknown.")`
+
+#### Household
+
+```{r} 
+
+keymessage <- "Lone parents most likely to be financially vulnerable"
+message(keymessage)
+
+```
+
+```{r chart3_4}
+
+subtitle <- "Proportion of households who are financially vulnerable by household type, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that were financially vulnerable, broken down by household type. 
+                      
+Lone parent households were the most likely to be financially vulnerable, whereas pensioner couple households were the least likely to be financially vulnerable. ", filter(tables3$table_4$rate, Group == "Lone parent")[[params$data_period]], " of lone parent households were financially vulnerable in ", params$data_period, ", compared to only ", filter(tables3$table_4$rate, Group == "Pensioner couple")[[params$data_period]], " of pensioner couple households. Over time, the risk of financial vulnerability had decreased for all groups, and most for lone parent households, couples with children, and single pensioner households.
+
+The 'Other' group contains households with additional adults such as non-dependent (grown-up) children or lodgers.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts3[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables3[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables3[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of financially vulnerable households, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables3[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables3[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+#### Employment
+
+```{r} 
+
+keymessage <- "Unemployed and inactive (but not retired) households most likely to be financially vulnerable"
+message(keymessage)
+
+```
+
+```{r chart3_5}
+
+subtitle <- "Proportion of households who are financially vulnerable by economic status of the household head, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that were financially vulnerable, broken down by the economic status of the household head. 
+                      
+Households with an inactive (but not retired) or unemployed household head were twice as likely to be financially vulnerable compared to households with an employed household head. ", filter(tables3$table_5$rate, Group == "Inactive/Unemployed")[[params$data_period]], " of households with an inactive/unemployed head were financially vulnerable in ", params$data_period, ", compared to only ", filter(tables3$table_5$rate, Group == "Employed")[[params$data_period]], " of households with an employed head, ", filter(tables3$table_5$rate, Group == "Retired")[[params$data_period]], " of households with a retired head, and ", filter(tables3$table_5$rate, Group == "Self-employed")[[params$data_period]], " of households with a self-employed household head. Over time, the risk of financial vulnerability had decreased for all groups, and most for households with an inactive or unemployed household head.
+
+Economic status data was available from 2014-2016.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts3[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables3[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables3[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of financially vulnerable households, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables3[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables3[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+#### Tenure
+
+```{r} 
+
+keymessage <- "Renters most likely to be financially vulnerable"
+message(keymessage)
+
+```
+
+```{r chart3_6}
+
+subtitle <- "Proportion of households who are financially vulnerable by housing tenure, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that were financially vulnerable, broken down by housing tenure. 
+                      
+Social renters were the most likely to be financially vulnerable, whereas those who owned their homes outright were the least likely to be financially vulnerable. ", filter(tables3$table_6$rate, Group == "Social renting")[[params$data_period]], " of households in the social rented sector were financially vulnerable in ", params$data_period, ", compared to ", filter(tables3$table_6$rate, Group == "Private renting")[[params$data_period]], " of private renters, ", filter(tables3$table_6$rate, Group == "Buying with mortgage")[[params$data_period]], " of those who were buying their home with a mortgage, and ", filter(tables3$table_6$rate, Group == "Owning outright")[[params$data_period]], " of those who owned their home outright. Over time, the risk of financial vulnerability had decreased for all groups, and most for social renters.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts3[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables3[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables3[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of financially vulnerable households, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables3[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables3[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+#### Income
+
+```{r} 
+keymessage <- "Lowest income households most likely to be financially vulnerable"
+message(keymessage)
+```
+
+```{r chart3_7}
+
+subtitle <- "Proportion of households who are financially vulnerable by household income quintile (20%-band), Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that were financially vulnerable, broken down by household income quintile (or 20%-band). 
+                      
+Lower income households are less likely to have any spare cash to save for an emergency. But there are also some high-income households with little savings. They may have very high living costs, or they choose to invest their spare cash into a private pension, or they might use it to pay off their mortgage.
+
+", tables3$table_7$rate[[params$data_period]][1], " of households in the bottom income quintile were financially vulnerable in ", params$data_period, ", compared to ", tables3$table_7$rate[[params$data_period]][2], " of households in the second income quintile, ", tables3$table_7$rate[[params$data_period]][3], " of households in the third quintile, ", tables3$table_7$rate[[params$data_period]][4], " of households in the fourth quintile, and ", tables3$table_7$rate[[params$data_period]][5], " of households in the top income quintile. 
+
+Over time, the risk of financial vulnerability had decreased for all groups, and most for the lowest income households.
+
+Income data was available from 2014-2016.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts3[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables3[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables3[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of financially vulnerable households, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables3[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables3[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+#### Education
+
+```{r} 
+
+keymessage <- "Lowest formally qualified households most likely to be financially vulnerable"
+message(keymessage)
+
+```
+
+```{r chart3_8}
+
+subtitle <- "Proportion of households who are financially vulnerable by qualification of the household head, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that were financially vulnerable, broken down by (formal) qualification of the household head. 
+                      
+Households with the lowest qualified household heads were the most likely to be financially vulnerable. ", filter(tables3$table_8$rate, Group == "No qualification")[[params$data_period]], " of households where the household head had no formal qualification were financially vulnerable in ", params$data_period, ", compared to only ", filter(tables3$table_8$rate, Group == "Degree-level or above")[[params$data_period]], " of households with highly qualified (degree-level or above) household heads. Over time, the risk of financial vulnerability had decreased for all groups, but most for the least qualified.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts3[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables3[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables3[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of financially vulnerable households, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables3[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables3[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+#### Age
+
+```{r} 
+
+keymessage <- "Younger households more likely to be financially vulnerable"
+message(keymessage)
+
+```
+
+```{r chart3_9}
+
+subtitle <- "Proportion of households who are financially vulnerable by age of the household head, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that were financially vulnerable, broken down by age of the household head. 
+                      
+Younger households tended to be more likely to be financially vulnerable. ", filter(tables3$table_9$rate, Group == "16-34")[[params$data_period]], " of households with 16-34 year-old household heads were financially vulnerable in ", params$data_period, ", similar to the 35-44 and 45-54 year-olds (", filter(tables3$table_9$rate, Group == "35-44")[[params$data_period]], " and ", filter(tables3$table_9$rate, Group == "45-54")[[params$data_period]], ", respectively). In contrast, ", filter(tables3$table_9$rate, Group == "55-64")[[params$data_period]], " of households with heads aged 55-64, ", filter(tables3$table_9$rate, Group == "65-74")[[params$data_period]], " of households with heads aged 65-74, and only ", filter(tables3$table_9$rate, Group == "75+")[[params$data_period]], " of households with heads aged 75 and over were financially vulnerable. Over time, the risk of financial vulnerability had decreased for all groups.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts3[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables3[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables3[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of financially vulnerable households, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables3[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables3[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+
+#### Marital
+
+```{r} 
+
+keymessage <- "Married (or Civil Partnered) and widowed least likely to be financially vulnerable"
+message(keymessage)
+
+```
+
+```{r chart3_10}
+
+subtitle <- "Proportion of households who are financially vulnerable by marital status of the household head, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that were financially vulnerable, broken down by marital status of the household head. 
+                      
+Households with married (or Civil Partnered) or widowed household heads were the least likely to be financially vulnerable. ", filter(tables3$table_10$rate, Group == "Married")[[params$data_period]], " of households with married or Civil Partnered household heads and ", filter(tables3$table_10$rate, Group == "Widowed")[[params$data_period]], " of households with widowed household heads were financially vulnerable in ", params$data_period, ".  Households with single (and never married), divorced (including separated), and cohabiting household heads were more likely to be financially vulnerable (", filter(tables3$table_10$rate, Group == "Single")[[params$data_period]], ", ", filter(tables3$table_10$rate, Group == "Divorced")[[params$data_period]], ", and ", filter(tables3$table_10$rate, Group == "Cohabiting")[[params$data_period]], ", respectively). Over time, the risk of financial vulnerability had decreased for all groups.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts3[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables3[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables3[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of financially vulnerable households, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables3[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables3[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+#### Children
+
+```{r} 
+
+keymessage <- "Households with children more likely to be financially vulnerable"
+message(keymessage)
+
+```
+
+```{r chart3_11}
+
+subtitle <- "Proportion of households who are financially vulnerable by whether there are dependent children living in the household, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that were financially vulnerable, broken down by whether there were any dependent children living in the household. 
+                      
+Households with children were more likely to be financially vulnerable compared to those without. ", filter(tables3$table_11$rate, Group == "With children")[[params$data_period]], " of households with dependent children were financially vulnerable in ", params$data_period, ", compared to ", filter(tables3$table_11$rate, Group == "No children")[[params$data_period]], " of households without any dependent children. Over time, the risk of financial vulnerability had decreased for both groups, but more so for households with children.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts3[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables3[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables3[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of financially vulnerable households, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables3[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables3[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+#### Disability
+
+```{r} 
+
+keymessage <- "Households with disabled members more likely to be financially vulnerable"
+message(keymessage)
+
+```
+
+
+```{r chart3_12}
+
+subtitle <- "Proportion of households who are financially vulnerable by whether there are disabled household members, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that were financially vulnerable, broken down by whether there were any disabled household members. 
+                      
+Households with disabled household members were more likely to be financially vulnerable compared to those with no disabled household members. ", filter(tables3$table_12$rate, Group == "Someone disabled")[[params$data_period]], " of households with disabled members were financially vulnerable in ", params$data_period, ", compared to ", filter(tables3$table_12$rate, Group == "No-one disabled")[[params$data_period]], " of households with no disabled members. Over time, the risk of financial vulnerability had decreased for both groups.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts3[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables3[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables3[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of financially vulnerable households, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables3[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables3[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+#### Sex
+
+```{r} 
+
+keymessage <- "Female-headed households more likely to be financially vulnerable"
+message(keymessage)
+
+```
+
+
+```{r chart3_13}
+
+subtitle <- "Proportion of households who are financially vulnerable by sex of the household head, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that were financially vulnerable, broken down by sex of the household head. 
+                      
+Female-headed households were more likely to be financially vulnerable compared to households with male household heads. ", filter(tables3$table_13$rate, Group == "Female")[[params$data_period]], " of female-headed households were financially vulnerable in ", params$data_period, ", compared to ", filter(tables3$table_13$rate, Group == "Male")[[params$data_period]], " of male-headed households. Over time, the risk of financial vulnerability had decreased for both groups, but more so for female-headed households.
+
+Note that some of the difference can be explained by lone parent households. Lone parent households have a high risk of being financially vulnerable, and most lone parent households are female-headed. However, excluding lone parent households from this analysis reduces the gap, but a gap remains.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts3[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables3[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables3[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of financially vulnerable households, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables3[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables3[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+#### Rural
+
+```{r} 
+
+keymessage <- "Urban households more likely to be financially vulnerable"
+message(keymessage)
+
+```
+
+`r infobox("Note that the Wealth and Assets Survey is not representative of areas north of the Caledonian Canal and the Scottish islands. Therefore, some of the most remote areas in Scotland are not included. Urban/rural breakdowns therefore require careful interpretation.")`
+
+```{r chart3_14}
+
+subtitle <- "Proportion of households who are financially vulnerable in urban and rural areas, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that were financially vulnerable, broken down by urban and rural areas. 
+                      
+Households in urban areas were more likely to be financially vulnerable compared to households in rural areas. ", filter(tables3$table_14$rate, Group == "Urban")[[params$data_period]], " of urban households were financially vulnerable in ", params$data_period, ", compared to ", filter(tables3$table_14$rate, Group == "Rural")[[params$data_period]], " of rural households. Over time, the risk of financial vulnerability had decreased for both groups, but more so for rural households.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts3[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables3[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables3[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of financially vulnerable households, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables3[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables3[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+#### Ethnicity
+
+```{r} 
+
+keymessage <- "Minority ethnic households similarly likely to be financially vulnerable compared to white British households"
+message(keymessage)
+
+```
+
+```{r chart3_15}
+
+subtitle <- "Proportion of households who are financially vulnerable by ethnicity of the household head, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that were financially vulnerable, broken down by ethnicity of the household head. 
+                      
+Minority ethnic households and white British households had a similar risk of being financially vulnerable. ", filter(tables3$table_15$rate, Group == "Minority ethnic")[[params$data_period]], " of minority ethnic households were financially vulnerable in ", params$data_period, ", compared to ", filter(tables3$table_15$rate, Group == "White British")[[params$data_period]], " of white British households. 
+
+The risk for the two groups is described as similar, because the difference was not consistent over time. The financial vulnerability risk had fluctuated for the minority ethnic group, and decreased for the white British group. The fluctuations were likely caused by variability in the small minority ethnic sample, and they also reflect the larger measurement uncertainty for smaller subgroups of the population. 
+
+Note that minority ethnic households include white ethnic minorities such as EU citizens and gypsy/travellers.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts3[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables3[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables3[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of financially vulnerable households, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables3[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables3[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey; Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+
+
+
+### Unmanageable debt {.tabset}
+
+Some households not only have no financial wealth, but they are in debt, or even in unmanageable debt. The definition of unmanageable debt in this report is identical to the Office for National Statistics’ problem debt, see their [Household debt in Great Britain report](https://www.ons.gov.uk/peoplepopulationandcommunity/personalandhouseholdfinances/incomeandwealth/bulletins/householddebtingreatbritain/latest). 
+
+In short, a household is in unmanageable debt if they have liquidity problems or solvency problems, or both. Liquidity problems mean people struggle with their debt repayments and are falling behind with bills. Solvency problems mean people have a large amount of debt and feel heavily burdened by it.
+
+Unmanageable debt in Scotland is monitored within Scotland’s [National Performance Framework](https://nationalperformance.gov.scot/).
+
+```{r} 
+
+keymessage <- "Few households have unmanageable debt"
+message(keymessage)
+
+```
+
+```{r chart3_16}
+
+subtitle <- "Proportion of households with unmanageable debt, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households with unmanageable debt over time.
+                      
+Very few households in Scotland had unmanageable debt, just ", tables3$table_16$rate[[params$data_period]]," in ", params$data_period, ". This figure had changed little since 2010-2012, when data on unmanageable debt was first collected.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts3[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            subtitle = subtitle,
+            description = description,
+            height = 3)
+
+table1 <- datatable(data = tables3[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables3[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables3[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3))
+
+```
+
+Note that unmanageable debt is a household-level measure, so breakdowns are for household characteristics such as household type and tenure, and individual characteristics of the household head (the person with the highest income).
+
+We include a range of breakdowns below. Differences between groups are generally small, and estimates tend to fluctuate over time due to the variability of the small samples of those in unmanageable debt. Therefore, we are limited in interpreting changes over time, or identifying clear differences between groups.
+
+We see the clearest differences between groups for economic status of the household head, household type and whether there are children in the household, housing tenure, and household income.
+
+Data on religion, sexual orientation, or area deprivation is not available for this analysis.
+
+`r infobox("Some of the breakdowns below may not be based on the full Scottish sample. This is because we excluded a small number of households where the breakdown characteristic was unknown.")`
+
+#### Employment
+
+```{r} 
+keymessage <- "Unemployed and inactive (but not retired) households most likely to have unmanageable debt"
+message(keymessage)
+```
+
+```{r chart3_17}
+
+subtitle <- "Proportion of households with unmanageable debt by economic status of the household head, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that had unmanageable debt, broken down by economic status of the household head.
+                      
+Households where the household head was economically inactive (but not retired) or unemployed were the most likely to have unmanageable debt. ", filter(tables3$table_17$rate, Group == "Inactive/Unemployed")[[params$data_period]], " of these households had unmanageable debt in ", params$data_period, ". In contrast, only ", filter(tables3$table_17$rate, Group == "Employed")[[params$data_period]], " of households where the household head was employed had unmanageable debt. Households with retired or self-employed household heads had hardly any risk of having unmanageable debt.
+
+Economic status data was available from 2014-2016.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts3[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables3[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables3[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of households with unmanageable debt, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables3[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables3[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+#### Household
+
+```{r} 
+
+keymessage <- "Lone parent households still most likely to have unmanageable debt"
+message(keymessage)
+
+```
+
+```{r chart3_18}
+
+subtitle <- "Proportion of households with unmanageable debt by household type, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that had unmanageable debt, broken down by household type.
+                      
+Lone parent households were the most likely to have unmanageable debt. ", filter(tables3$table_18$rate, Group == "Lone parent")[[params$data_period]], " of lone parent households had unmanageable debt in ", params$data_period, ". In contrast, pensioner households had hardly any risk of having unmanageable debt.
+
+The 'Other' group contains households with additional adults such as non-dependent (grown-up) children.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts3[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables3[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables3[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of households with unmanageable debt, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables3[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables3[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+#### Tenure
+
+```{r} 
+keymessage <- "Social renters more likely to have unmanageable debt"
+message(keymessage)
+```
+
+```{r chart3_19}
+
+subtitle <- "Proportion of households with unmanageable debt by housing tenure, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that had unmanageable debt, broken down by housing tenure.
+                      
+Households in the social rented sector were the most likely to have unmanageable debt. ", filter(tables3$table_19$rate, Group == "Social renting")[[params$data_period]], " of social renting households had unmanageable debt in ", params$data_period, ".")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts3[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables3[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables3[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of households with unmanageable debt, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables3[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables3[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+#### Ethnicity
+
+```{r} 
+
+keymessage <- "No clear differences in unmanageable debt risk for minority ethnic households"
+message(keymessage)
+
+```
+
+```{r chart3_20}
+
+subtitle <- "Proportion of households with unmanageable debt by ethnicity of the household head, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that had unmanageable debt, broken down by ethnicity of the household head.
+                      
+While minority ethnic households appeared to have been more likely to have unmanageable debt, estimates also fluctuated over time, and a clear interpretation of differences is difficult. In ", params$data_period, ", ", filter(tables3$table_20$rate, Group == "Minority ethnic")[[params$data_period]], " of minority ethnic households and ", filter(tables3$table_20$rate, Group == "White British")[[params$data_period]], " of white British households had unmanageable debt.
+
+We describe the risk for the two groups as similar, because the difference was not consistent over time. The fluctuations were likely caused by variability in the small minority ethnic sample, and they also reflect the larger measurement uncertainty for smaller subgroups of the population. 
+
+Note that minority ethnic households include white ethnic minorities such as EU citizens and gypsy/travellers.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts3[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables3[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables3[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of households with unmanageable debt, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables3[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables3[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+#### Age
+
+```{r} 
+
+keymessage <- "Youngest households most likely to have unmanageable debt"
+message(keymessage)
+
+```
+
+```{r chart3_21}
+
+subtitle <- "Proportion of households with unmanageable debt by age of the household head, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that had unmanageable debt, broken down by age of the household head. 
+                      
+Younger households tended to be more likely to have unmanageable debt. ", filter(tables3$table_21$rate, Group == "35-44")[[params$data_period]], " of households with 35-44 year-old household heads had unmanageable debt in ", params$data_period, ", similar to the 45-54 and 16-34 year-olds (", filter(tables3$table_21$rate, Group == "45-54")[[params$data_period]], " and ", filter(tables3$table_21$rate, Group == "16-34")[[params$data_period]], ", respectively). In contrast, households with heads aged 55 and above had hardly any risk of having unmanageable debt.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts3[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables3[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables3[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of households with unmanageable debt, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables3[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables3[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+
+#### Children
+
+```{r} 
+
+keymessage <- "Households with children more likely to have unmanageable debt"
+message(keymessage)
+
+```
+
+```{r chart3_22}
+
+subtitle <- "Proportion of households with unmanageable debt by whether there are dependent children living in the household, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that had unmanageable debt, broken down by whether there were dependent children living in the household.
+                      
+Households with dependent children were consistently more likely to have unmanageable debt compared to households without any children. In ", params$data_period, ", ", filter(tables3$table_22$rate, Group == "With children")[[params$data_period]], " of households with children had unmanageable debt, compared to ", filter(tables3$table_22$rate, Group == "No children")[[params$data_period]], " of households without any children.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts3[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables3[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables3[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of households with unmanageable debt, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables3[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables3[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+
+#### Income
+
+```{r} 
+
+keymessage <- "Lowest income households most likely to have unmanageable debt"
+message(keymessage)
+
+```
+
+```{r chart3_23}
+
+subtitle <- "Proportion of households with unmanageable debt by household income quintile (or 20%-band), Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that had unmanageable debt, broken down by household income quintile (or 20%-band). 
+                      
+Lower-income households tended to be more likely to have unmanageable debt. ", filter(tables3$table_23$rate, Group == "1st (lowest) household income quintile")[[params$data_period]], " of households in the bottom income quintile and ", filter(tables3$table_23$rate, Group == "2nd")[[params$data_period]], " of household in the second lowest income quintile had unmanageable debt in ", params$data_period, ". The highest income households had hardly any risk of having unmanageable debt.
+
+Income data was available from 2014-2016.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts3[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables3[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables3[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of households with unmanageable debt, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables3[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables3[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+#### Marital
+
+```{r} 
+
+keymessage <- "Married and widowed households least likely to have unmanageable debt"
+message(keymessage)
+
+```
+
+```{r chart3_24}
+
+subtitle <- "Proportion of households with unmanageable debt by marital status of the household head, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that had unmanageable debt, broken down by marital status of the household head.
+                      
+Households where the household heads were divorced (or separated) or single (and never married) were the most likely to have unmanageable debt. ", filter(tables3$table_24$rate, Group == "Divorced")[[params$data_period]], " of households with divorced household heads and ", filter(tables3$table_24$rate, Group == "Single")[[params$data_period]], " of households with single household heads had unmanageable debt in ", params$data_period, ". In contrast, households with married (and Civil Partnered) household heads had a smaller risk of having unmanageable debt, and households with widowed household heads had hardly any risk. 
+
+The debt risk for households with cohabiting household heads had dropped recently, but the sample size had also dropped and it is unclear whether this change was real.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts3[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables3[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables3[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of households with unmanageable debt, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables3[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables3[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+#### Disability
+
+```{r} 
+
+keymessage <- "Households with disabled members tend to be more likely to have unmanageable debt"
+message(keymessage)
+
+```
+
+```{r chart3_25}
+
+subtitle <- "Proportion of households with unmanageable debt by whether there are disabled household members, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that had unmanageable debt, broken down by whether there were disabled household members in the household.
+                      
+In most data periods, households with disabled household members were more likely to have unmanageable debt compared to households with no disabled household members. In ", params$data_period, ", ", filter(tables3$table_25$rate, Group == "Someone disabled")[[params$data_period]], " of households with disabled household members had unmanageable debt, compared to ", filter(tables3$table_25$rate, Group == "No-one disabled")[[params$data_period]], " of households where no-one was disabled.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts3[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables3[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables3[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of households with unmanageable debt, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables3[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables3[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+
+#### Education
+
+```{r} 
+
+keymessage <- "Qualification of household head has little impact on whether household has unmanageable debt"
+message(keymessage)
+
+```
+
+```{r chart3_26}
+
+subtitle <- "Proportion of households with unmanageable debt by qualification of the household head, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that had unmanageable debt, broken down by the (formal) qualification of the household head.
+                      
+While there were no major differences, households with highly qualified household heads tended to have been less likely to have unmanageable debt compared to households with lower-qualified household heads. In ", params$data_period, ", ", filter(tables3$table_26$rate, Group == "Degree-level or above")[[params$data_period]], " of households where the household head had a degree-level or higher qualification had unmanageable debt, compared to ", filter(tables3$table_26$rate, Group == "No qualification")[[params$data_period]], " of households where the household head had no formal qualification, and ", filter(tables3$table_26$rate, Group == "Other qualification")[[params$data_period]]," of households where the household head had another type of qualification.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts3[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables3[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables3[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of households with unmanageable debt, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables3[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables3[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+#### Sex
+
+```{r} 
+
+keymessage <- "Male and female headed households similarly likely to have unmanageable debt"
+message(keymessage)
+
+```
+
+```{r chart3_27}
+
+subtitle <- "Proportion of households with unmanageable debt by sex of the household head, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that had unmanageable debt, broken down by whether the household head was male or female.
+                      
+Households headed by men and women had a similar risk of having unmanageable debt. In ", params$data_period, ", ", filter(tables3$table_27$rate, Group == "Male")[[params$data_period]], " of male-headed households and ", filter(tables3$table_27$rate, Group == "Female")[[params$data_period]], " of female-headed households had unmanageable debt.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts3[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables3[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables3[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of households with unmanageable debt, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables3[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables3[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+#### Rural
+
+```{r} 
+
+keymessage <- "Urban or a rural similarly likely to have unmanageable debt"
+message(keymessage)
+
+```
+
+`r infobox("Note that the Wealth and Assets Survey is not representative of areas north of the Caledonian Canal and the Scottish islands. Therefore, some of the most remote areas in Scotland are not included. Urban/rural breakdowns therefore require careful interpretation.")`
+
+```{r chart3_28}
+
+subtitle <- "Proportion of households with unmanageable debt in urban and rural areas, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that had unmanageable debt, broken down by urban and rural areas.
+                      
+Households in urban and rural areas had a similar risk of having unmanageable debt. In ", params$data_period, ", ", filter(tables3$table_28$rate, Group == "Urban")[[params$data_period]], " of urban households and ", filter(tables3$table_28$rate, Group == "Rural")[[params$data_period]], " of rural households had unmanageable debt.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts3[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables3[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables3[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of households with unmanageable debt, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables3[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables3[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+

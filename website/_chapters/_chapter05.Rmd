@@ -1,0 +1,813 @@
+## Pension wealth
+
+```{r}
+id <- 0
+fign <- length(tables1) + length(tables2) + length(tables3) + length(tables4)
+```
+
+People often start saving for a private pension when they enter the labour market, either through a workplace pension or a personal pension. Pension wealth builds up over a person's working life, and decreases again after they retire and when the pension is paid out, replacing earnings.
+
+Private pension wealth is an estimate of the value of wealth held in private (non-state) pension schemes, expressed as an equivalent ‘pot of money’. The estimate is based only on the pension rights accumulated to date and does not include rights which may be built up in future.
+
+We report on pension wealth on an individual adult level.
+
+### How much pension wealth? {.tabset}
+
+```{r}
+
+fig2 <- percent2(1 - as.numeric(str_remove(filter(tables5$table_7$rate, Group == "All")[[params$data_period]], "%"))/100)
+
+```
+
+`r filter(tables5$table_7$rate, Group == "All")[[params$data_period]]` of adults in Scotland had private pension wealth in `r params$data_period`, either in payment, or not yet in payment, while `r fig2` had none.
+
+#### Distribution
+
+```{r}
+
+keymessage <- paste0("The wealthiest adults with private pensions had on average ", 
+                     tables5$table_1$median[["10"]], 
+                     " in pension wealth, whereas the least wealthy had ", 
+                     tables5$table_1$median[["1"]])
+
+message(keymessage)
+
+```
+
+```{r chart5_1}
+
+subtitle <- paste0("Median individual pension wealth by pension wealth decile (excludes adults without any private pensions), Scotland ", params$data_period)
+
+description <- paste0("The bar chart in figure ", fign + 1, " splits all adults with at least some pension wealth into ten equal-sized groups (called deciles), sorted by pension wealth amount from the least wealthy on the left, to the wealthiest on the right. The height of the bars shows the typical pension wealth amount of each group, or the decile medians.
+
+Of those adults who had any pension wealth, the ones with the highest pension wealth had a lot more compared to those with the least pension wealth. A typical adult in the top decile had ", tables5$table_1$median[["10"]], " in pension wealth, whereas a typical adult in the bottom decile had ", tables5$table_1$median[["1"]], ".
+
+Table ", fign + 1, "b also shows that the pension wealthiest adults tended to be older than the least pension wealthy. This is because younger adults are only starting out with saving for a pension, whereas many older adults have built up pension wealth over their working lives.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts5[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables5[[paste0("table_", id)]]$median,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables5[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Median age, Scotland ", params$data_period),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+  
+table3 <- datatable(data = tables5[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Sample sizes, Scotland ", params$data_period),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3))
+
+```
+
+#### Trends
+
+```{r}
+keymessage <- "Average pension wealth decreasing"
+message(keymessage)
+```
+
+```{r chart5_2}
+
+subtitle <- "Median individual (inflation-adjusted) pension wealth by pension wealth decile (excludes adults without any private pensions), Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows how median pension wealth in each pension wealth decile changed over time. In ", params$data_period, ", median pension wealth decreased in all deciles except for the bottom decile, following a peak in 2014-2016 for most deciles. This happened alongside increasing pension participation, see section [Who has pension wealth?](#who-had-pension-wealth).")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts5[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            subtitle = subtitle,
+            description = description,
+            height = 5)
+
+table1 <- datatable(data = tables5[[paste0("table_", id)]]$median,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables5[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Median age, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+  
+table3 <- datatable(data = tables5[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3))
+
+```
+
+### Saving for a pension {.tabset}
+
+A pension can be in payment or not yet in payment. In this section, we look at how many adults have a pension that is not yet in payment.
+
+#### Who's saving?
+
+```{r}
+keymessage <- "Majority of women and men under 65 saving for a private pension"
+message(keymessage)
+```
+
+```{r chart5_3}
+
+subtitle <- paste0("Proportion of adult men and women with private pensions (not yet in payment) by age, Scotland ", params$data_period)
+
+description <- paste0("Figure ", fign + 1, " shows women and men who had a private pension that was not yet in payment as a proportion of all women and men, broken down by age. 
+                      
+The majority of men and women in all age groups under the age of 65 had some pension wealth. A minority of older men and women also had pension wealth that was not yet in payment.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts5[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            subtitle = subtitle,
+            description = description,)
+
+table1 <- datatable(data = tables5[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables5[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Sample sizes, Scotland ", params$data_period),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2))
+
+```
+
+#### Trends
+
+```{r}
+keymessage <- "Private pension gender gap not closing"
+message(keymessage)
+```
+
+```{r chart5_4}
+
+subtitle <- "Proportion of adult men and women with private pensions (not yet in payment), Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows how many women and men had a private pension that was not yet in payment as a proportion of all women and men, over time.
+
+The proportion of both men and women who were saving for a pension steadily increased, with ", filter(tables5$table_4$rate, Group == "Men")[[params$data_period]], " of men and ", filter(tables5$table_4$rate, Group == "Women")[[params$data_period]], " of women saving for a pension in ", params$data_period, ". The gap between women and men had remained constant since 2010-2012.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts5[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables5[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables5[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of adults with private pensions (not yet in payment), Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables5[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3))
+
+```
+
+### Pensions in payment {.tabset}
+
+In this section, we look at pensions that are in payment, and at how many adults are being paid a private pension.
+
+#### Who's getting paid?
+
+```{r}
+keymessage <- "Older men more likely to be paid a private pension than older women"
+message(keymessage)
+```
+
+```{r chart5_5}
+
+subtitle <- paste0("Proportion of adult men and women with private pensions in payment by age, Scotland ", params$data_period)
+
+description <- paste0("Figure ", fign + 1, " shows women and men who received private pension payments as a proportion of all women and men, broken down by age. 
+                      
+The majority of men and women aged 65 and above, and a minority of younger men and women, had some private pension in payment. Men aged 55 and over were more likely to be in receipt of a private pension than women in the same age group.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts5[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables5[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables5[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Sample sizes, Scotland ", params$data_period),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2))
+
+```
+
+#### Trends
+
+```{r}
+keymessage <- "A fifth of men and slightly fewer women have a private pension in payment"
+message(keymessage)
+```
+
+```{r chart5_6}
+
+subtitle <- "Proportion of adult men and women with private pensions in payment, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows how many women and men had a private pension in payment as a proportion of all women and men, over time.
+
+The proportion of both men and women who were receiving private pension payments was broadly stable, with ", filter(tables5$table_6$rate, Group == "Men")[[params$data_period]], " of men and ", filter(tables5$table_6$rate, Group == "Women")[[params$data_period]], " of women in receipt of a pension in ", params$data_period, ". The small gap between women and men remained largely constant since 2006-2008, when data collection began.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts5[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables5[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables5[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of adults with private pensions in payment, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables5[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3))
+
+```
+
+### Who has pension wealth? {.tabset #who-had-pension-wealth}
+
+In this section, we look at the share of adults who had pension wealth, whether that was in payment or not yet in payment, and what their characteristics were. `r filter(tables5$table_7$rate, Group == "All")[[params$data_period]]` of adults had private pension wealth in `r params$data_period`, while `r fig2` had none. The share of adults who did have some pension wealth increased since 2012-2014, when it had been just `r filter(tables5$table_11$rate, Group == "All")[["2012-2014"]]` of adults. The increase happened as more and more people were [automatically enrolled](#automatic-enrolment-definition) into workplace pension schemes.
+
+Income, (formal) qualification and employment strongly influence whether people have any pension wealth, and age influences how much pension wealth they have. A good qualification makes it more likely to have employment and earnings and being enrolled into a pension scheme. Age influences how long adults have been able to save, and therefore the amount of pension wealth they were able to build.
+
+`r infobox("Some of the breakdowns below may not be based on the full Scottish sample. This is because we excluded a small number of individuals where the breakdown characteristic was unknown.")`
+
+#### Income
+
+```{r}
+keymessage <- "Highest income adults most likely to have a private pension"
+message(keymessage)
+```
+
+```{r chart5_7}
+
+subtitle <- "Proportion of adults with private pension wealth by equivalised household income quintile (or 20%-band), Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows adults with private pension wealth as a proportion of all adults, broken down by income quintile (or 20%-band).
+                      
+", tables5$table_7$rate[[params$data_period]][1], " of adults in the highest income quintile had private pension wealth in ", params$data_period, ", whereas only ", tables5$table_7$rate[[params$data_period]][5], " of adults in the lowest income quintile had any private pension wealth. Adults in the lowest income quintile saw the largest increase in pension participation, up from ", tables5$table_7$rate[["2014-2016"]][5], " in 2014-2016, when income data was first collected.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts5[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables5[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables5[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of adults with private pension wealth, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables5[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables5[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+```
+
+#### Education
+
+```{r}
+keymessage <- "Higher qualified adults more likely to have a private pension"
+message(keymessage)
+```
+
+```{r chart5_8}
+
+subtitle <- "Proportion of adults with private pension wealth by qualification, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows adults with private pension wealth as a proportion of all adults, broken down by qualification.
+                      
+", filter(tables5$table_8$rate, Group == "Degree-level or above")[[params$data_period]], " of adults with a degree-level or higher qualification had private pension wealth in ", params$data_period, ", whereas only ", filter(tables5$table_8$rate, Group == "No qualification")[[params$data_period]], " of adults with no formal qualification had any private pension wealth. More highly qualified adults had also seen larger increases in pension participation since 2006-2008, when data collection began.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts5[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables5[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables5[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of adults with private pension wealth, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables5[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables5[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+```
+
+#### Employment
+
+```{r}
+keymessage <- "Employed and retired adults most likely to have a private pension"
+message(keymessage)
+```
+
+```{r chart5_9}
+
+subtitle <- "Proportion of adults with private pension wealth by economic status, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows adults with private pension wealth as a proportion of all adults, broken down by economic status.
+                      
+", filter(tables5$table_9$rate, Group == "Employed")[[params$data_period]], " of employed adults,  ", filter(tables5$table_9$rate, Group == "Retired")[[params$data_period]], " of retired adults, and ", filter(tables5$table_9$rate, Group == "Self-employed")[[params$data_period]], " of self-employed adults had private pension wealth in ", params$data_period, ". In contrast, less than a third of other inactive or unemployed adults had any private pension wealth. 
+
+Employed adults had also seen a large increase in pension participation since 2014-2016 (up from ", filter(tables5$table_9$rate, Group == "Employed")[["2014-2016"]], "), when economic status data was first collected, whereas the self-employed saw little change. This is likely because [automatic enrolment](#automatic-enrolment-definition) into a workplace pension scheme only affected the employed.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts5[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables5[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables5[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of adults with private pension wealth, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables5[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables5[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+```
+
+#### Orientation
+
+```{r}
+keymessage <- "Hetero / straight adults less likely to have a private pension"
+message(keymessage)
+```
+
+`r infobox("Only adults who responded to the survey in person were included in the sexual orientation breakdown. No proxy-responses are included. This reduced the sample size.")`
+
+```{r chart5_10}
+
+subtitle <- "Proportion of adults with private pension wealth by sexual orientation, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows adults with private pension wealth as a proportion of all adults, broken down by sexual orientation.
+                      
+", filter(tables5$table_10$rate, Group == "Hetero / straight")[[params$data_period]], " of hetero or straight adults had private pension wealth in ", params$data_period, ", slightly fewer than gay, lesbian, bisexual or other adults combined (", filter(tables5$table_10$rate, Group == "Other")[[params$data_period]], "). Note though that there were only few adults in the sample who reported to be gay, lesbian, bisexual, or other. Both groups had seen increases since 2014-2016, when sexual orientation data was first collected.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts5[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables5[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables5[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of adults with private pension wealth, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables5[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables5[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+```
+
+#### Marital
+
+```{r}
+keymessage <- "Single (never married) adults least likely to have a private pension"
+message(keymessage)
+```
+
+```{r chart5_11}
+
+subtitle <- "Proportion of adults with private pension wealth by marital status, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows adults with private pension wealth as a proportion of all adults, broken down by marital status.
+                      
+", filter(tables5$table_11$rate, Group == "Married")[[params$data_period]], " of married and Civil Partnered adults, ", filter(tables5$table_11$rate, Group == "Widowed")[[params$data_period]], ", of widowed adults, ", filter(tables5$table_11$rate, Group == "Divorced")[[params$data_period]], " of divorced and separated adults, ", filter(tables5$table_11$rate, Group == "Cohabiting")[[params$data_period]], " of cohabiting adults, and ", filter(tables5$table_11$rate, Group == "Single")[[params$data_period]]," of single (and never married) adults had private pension wealth in ", params$data_period, ". All groups had seen increases since 2006-2008, when data collection began.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts5[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables5[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables5[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of adults with private pension wealth, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables5[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables5[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+```
+
+#### Age
+
+```{r}
+keymessage <- "Youngest adults least likely to have a private pension"
+message(keymessage)
+```
+
+
+```{r chart5_12}
+
+subtitle <- "Proportion of adults with private pension wealth by age, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows adults with private pension wealth as a proportion of all adults, broken down by age.
+
+Adults aged 35-44 were most likely to have private pension wealth (", filter(tables5$table_12$rate, Group == "35-44")[[params$data_period]], ") in ", params$data_period, ", whereas the youngest adults, namely those aged between 16 and 34, were the least likely (", filter(tables5$table_12$rate, Group == "16-34")[[params$data_period]], "). This gap had been decreasing in recent years, largely due to [automatic enrolment](#automatic-enrolment-definition) into workplace pension schemes of employees.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts5[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables5[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables5[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of adults with private pension wealth, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables5[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables5[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+```
+
+#### Religion
+
+```{r}
+keymessage <- "Christian adults and those without a religion more likely to have a private pension"
+message(keymessage)
+```
+
+`r infobox("Only adults who responded to the survey in person were included in the religion breakdown. No proxy-responses are included. This reduced the sample size.")`
+
+```{r chart5_13}
+
+subtitle <- "Proportion of adults with private pension wealth by religion, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows adults with private pension wealth as a proportion of all adults, broken down by religion.
+
+", filter(tables5$table_13$rate, Group == "Christian")[[params$data_period]], " of Christian adults and ", filter(tables5$table_13$rate, Group == "No religion")[[params$data_period]], " of adults with no religion had private pension wealth in ", params$data_period, ", slightly more than adults with another religion (", filter(tables5$table_13$rate, Group == "Other religion")[[params$data_period]], "). All groups had seen increases in pension participation since 2006-2008, when data collection began.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts5[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables5[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables5[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of adults with private pension wealth, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables5[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables5[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+```
+
+#### Ethnicity
+
+```{r}
+keymessage <- "White British adults more likely to have a private pension"
+message(keymessage)
+```
+
+`r infobox("Only adults who responded to the survey in person were included in the ethnicity breakdown. No proxy-responses are included. This reduced the sample size.")`
+
+```{r chart5_14}
+
+subtitle <- "Proportion of adults with private pension wealth by ethnicity, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows adults with private pension wealth as a proportion of all adults, broken down by ethnicity.
+
+", filter(tables5$table_14$rate, Group == "White British")[[params$data_period]], " of White British adults had private pension wealth in ", params$data_period, ", more than minority ethnic adults (", filter(tables5$table_14$rate, Group == "Minority ethnic")[[params$data_period]], "). Note that minority ethnic households include white ethnic minorities such as EU citizens and gypsy/travellers. Note also that minority ethnic adults are on average younger than White British adults, and that the youngest adults are also the least likely to have a private pension. This can at least partly explain the gap. The gap had narrowed since 2006-2008, when data collection began, as pension participation increased faster for minority ethnic adults than it did for White British adults.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts5[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables5[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables5[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of adults with private pension wealth, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables5[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables5[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+```
+
+#### Disability 
+
+```{r}
+keymessage <- "Disabled adults less likely to have a private pension"
+message(keymessage)
+```
+
+```{r chart5_15}
+
+subtitle <- "Proportion of adults with private pension wealth by whether they are disabled, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows adults with private pension wealth as a proportion of all adults, broken down by whether they were disabled.
+                      
+Only ", filter(tables5$table_15$rate, Group == "Disabled")[[params$data_period]], " of disabled adults had private pension wealth in ", params$data_period, ", whereas ", filter(tables5$table_15$rate, Group == "Not disabled")[[params$data_period]], " of adults who were not disabled had a private pension. Both groups had seen increases since 2006-2008, when data collection began, with the gap slightly widening in recent years.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts5[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables5[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables5[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of adults with private pension wealth, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables5[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables5[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+```
+
+#### Sex
+
+```{r}
+keymessage <- "Men more likely to have a private pension"
+message(keymessage)
+```
+
+```{r chart5_16}
+
+subtitle <- "Proportion of adults with private pension wealth by sex, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows men and women with private pension wealth as a proportion of all men and all women.
+                      
+", filter(tables5$table_16$rate, Group == "Men")[[params$data_period]], " of men had private pension wealth in ", params$data_period, ", whereas only ", filter(tables5$table_16$rate, Group == "Women")[[params$data_period]], " of women did. Both, men and women, had seen increases since 2006-2008 (when data collection began), with the gap slowly narrowing.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts5[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables5[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables5[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of adults with private pension wealth, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables5[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables5[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+```
+

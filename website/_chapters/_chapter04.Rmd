@@ -1,0 +1,699 @@
+## Property wealth
+
+```{r}
+id <- 0
+fign <- length(tables1) + length(tables2) + length(tables3)
+```
+
+This chapter shows the distribution of property wealth for those households that own property, and looks at which kinds of households are more likely than others to own property. Property wealth (net property wealth) is the self-reported value of all property owned (such as the main residence or any other property) less any debt on the property (e.g. mortgage) and equity release. 
+
+We report on property wealth on a household level.
+
+### How much property wealth? {.tabset}
+
+```{r}
+
+fig1 <- tables4$table_3$rate %>% filter(Group == "All") %>% select(params$data_period) %>% pull()
+fig2 <- percent2(1 - as.numeric(str_remove(fig1, "%"))/100)
+
+```
+
+`r fig1` of households in Scotland owned some property in `r params$data_period`, while `r fig2` had none.
+
+#### Distribution
+
+```{r}
+
+keymessage <- paste0("The wealthiest home-owning households had on average ", 
+                     tables4$table_1$median[["10"]], 
+                     " in property wealth, whereas the least wealthy had ", 
+                     tables4$table_1$median[["1"]])
+
+message(keymessage)
+
+```
+
+Figure `r fign + 1` shows how the property wealth of those who had any was distributed.
+
+```{r chart4_1}
+
+subtitle <- paste0("Median net property wealth by property wealth decile (includes property
+owners only), Scotland ", params$data_period)
+
+description <- paste0("The bar chart in figure ", fign + 1, " splits all households who own property into ten equal-sized groups (called deciles), sorted by property wealth amount from the least wealthy on the left, to the wealthiest on the right. The height of the bars shows the typical property wealth amount of each group, or the decile medians.
+
+The property-owning households with the highest property wealth had a lot more compared to those with the least property wealth. A typical household in the top decile had ", tables4$table_1$median[["10"]], " in property wealth, whereas a typical household in the bottom decile had ", tables4$table_1$median[["1"]], ".
+
+Table ", fign + 1, "b also shows that the property wealthiest households tended to have older household heads than the least property wealthy. This is because younger households may have only recently bought their first property and are still paying off the mortgage, whereas many older households may already own their house outright.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts4[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables4[[paste0("table_", id)]]$median,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables4[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Median age of household head, Scotland ", params$data_period),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+  
+table3 <- datatable(data = tables4[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Sample sizes, Scotland ", params$data_period),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3))
+
+```
+
+#### Trends
+
+```{r}
+keymessage <- "Property wealth broadly stable"
+message(keymessage)
+```
+
+```{r chart4_2}
+
+subtitle <- "Median (inflation-adjusted) net property wealth by property wealth decile (includes property
+owners only), Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows how median property wealth in each property wealth decile changed over time. In ", params$data_period, ", median property wealth remained largely stable.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts4[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            subtitle = subtitle,
+            description = description, 
+            height = 4.5)
+
+table1 <- datatable(data = tables4[[paste0("table_", id)]]$median,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables4[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+  
+table3 <- datatable(data = tables4[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3))
+
+```
+
+### Who owns property? {.tabset}
+
+In this section, we look at the share of households in Scotland who owned property and what their characteristics were. `r fig1` of households owned some property in `r params$data_period`, while `r fig2` had none. This had changed very little since 2006-2008, when data collection began. Property ownership is strongly influenced by whether people live alone or in couples, because two adults can pool their resources and more easily afford a mortgage deposit and buy a home. It is also influenced by household income, economic status and formal qualification of the household head, and to a lesser degree, age.
+
+Data on religion, sexual orientation, or area deprivation is not available for this analysis.
+
+`r infobox("Some of the breakdowns below may not be based on the full Scottish sample. This is because we excluded a small number of households where the breakdown characteristic was unknown.")`
+
+#### Household
+
+```{r} 
+keymessage <- "Couple households more likely to own property"
+message(keymessage)
+```
+
+```{r chart4_3}
+
+subtitle <- "Proportion of households with property wealth by household type, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that owned property, broken down by household type. Couple households were more likely to own property compared to single households. For example, ", filter(tables4$table_3$rate, Group == "Pensioner couple")[[params$data_period]], " of pensioner couple households owned property in ", params$data_period, ", whereas only ", filter(tables4$table_3$rate, Group == "Single working-age")[[params$data_period]], " of single working-age adult households and ", filter(tables4$table_3$rate, Group == "Lone parent")[[params$data_period]], " of lone parent households did.
+                      
+The 'Other' group contains households with additional adults such as non-dependent (grown-up) children or lodgers.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts4[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables4[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables4[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of households with property wealth, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables4[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables4[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+#### Income
+
+```{r} 
+keymessage <- "Higher income households more likely to own property"
+message(keymessage)
+```
+
+```{r chart4_4}
+
+subtitle <- "Proportion of households with property wealth by equivalised household income quintile (or 20%-band), Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that owned property, broken down by income quintile (or 20%-band). 
+                      
+The households with the highest income were most likely to own property, whereas the households with the lowest income were least likely to own any property. For example, ", tables4$table_4$rate[[params$data_period]][1], " of the top quintile households owned property in ", params$data_period, ", whereas only ", tables4$table_4$rate[[params$data_period]][5], " of the bottom quintile households did. Since 2014-2016, when income data was first collected, property ownership rates had slightly decreased for the top three income quintiles, and slightly increased for the bottom quintile households, narrowing the gap.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts4[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables4[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables4[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of households with property wealth, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables4[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables4[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+#### Employment
+
+```{r} 
+keymessage <- "Unemployed and inactive (but not retired) households least likely to own property"
+message(keymessage)
+```
+
+```{r chart4_5}
+
+subtitle <- "Proportion of households with property wealth by economic status of the household head, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that owned property, broken down by the economic status of the household head. 
+                      
+Households with self-employed, employed, and retired household heads were much more likely to own property than those with a household head who was economically inactive (other than retired) or unemployed. In ", params$data_period, ", ", filter(tables4$table_5$rate, Group == "Self-employed")[[params$data_period]], " of households with a self-employed household head, ", filter(tables4$table_5$rate, Group == "Retired")[[params$data_period]], " of households with a retired household head, and ", filter(tables4$table_5$rate, Group == "Employed")[[params$data_period]], " of households with an employed household head owned property. In contrast, only ", filter(tables4$table_5$rate, Group == "Inactive/Unemployed")[[params$data_period]], " of households whose household head was economically inactive (other than retired) or unemployed owned any property.
+
+Economic status data was available from 2014-2016.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts4[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables4[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables4[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of households with property wealth, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables4[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables4[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+#### Education
+
+```{r} 
+keymessage <- "Most highly qualified most likely to own property"
+message(keymessage)
+```
+
+```{r chart4_6}
+
+subtitle <- "Proportion of households with property wealth by qualification of the household
+head, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that owned property, broken down by the formal qualification of the household head. 
+                      
+Households with more highly qualified household heads were more likely to own property than those with a household head who had no formal qualification. In ", params$data_period, ", ", filter(tables4$table_6$rate, Group == "Degree-level or above")[[params$data_period]], " of households with a household head who had a degree-level (or above) qualification owned property. In contrast, only ", filter(tables4$table_6$rate, Group == "No qualification")[[params$data_period]], " of households whose household head had no formal qualification owned any property.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts4[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage),
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables4[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables4[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of households with property wealth, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables4[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables4[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+#### Marital
+
+```{r} 
+keymessage <- "Married and Civil Partnered couples most likely to own property"
+message(keymessage)
+```
+
+```{r chart4_7}
+
+subtitle <- "Proportion of households with property wealth by marital status of the household head, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that owned property, broken down by the household head's marital status. 
+                      
+Households with household heads who were married (and Civil Partnered) were the most likely households to own property. In ", params$data_period, ", ", filter(tables4$table_7$rate, Group == "Married")[[params$data_period]], " of households with a married (or Civil Partnered) household head owned property. This was higher than for households with household heads that were widowed (", filter(tables4$table_7$rate, Group == "Widowed")[[params$data_period]], "), cohabiting (", filter(tables4$table_7$rate, Group == "Cohabiting")[[params$data_period]], "), single and never married (", filter(tables4$table_7$rate, Group == "Single")[[params$data_period]], "), or divorced (including separated and Civil Partnership dissolved; ", filter(tables4$table_7$rate, Group == "Divorced")[[params$data_period]], "). While some of the estimates fluctuated a little over time, the differences remained broadly stable.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts4[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables4[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables4[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of households with property wealth, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables4[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables4[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+#### Age
+
+```{r} 
+keymessage <- "Youngest households least likely to own property"
+message(keymessage)
+```
+
+```{r chart4_8}
+
+subtitle <- "Proportion of households with property wealth by age of the household head, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that owned property, broken down by age of the household head. 
+                      
+The households with the youngest household heads were the least likely households to own property. In ", params$data_period, ", ", filter(tables4$table_8$rate, Group == "16-34")[[params$data_period]], " of households with a household head aged under 35 owned property. This was lower than for households with household heads aged 35-44 (", filter(tables4$table_8$rate, Group == "35-44")[[params$data_period]], ") , 45-54 (", filter(tables4$table_8$rate, Group == "45-54")[[params$data_period]], ") , 55-64 (", filter(tables4$table_8$rate, Group == "55-64")[[params$data_period]], ") , 65-74 (", filter(tables4$table_8$rate, Group == "65-74")[[params$data_period]], ") , and 75 and older (", filter(tables4$table_8$rate, Group == "75+")[[params$data_period]], ").")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts4[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables4[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables4[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of households with property wealth, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables4[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables4[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+#### Disability
+
+```{r} 
+keymessage <- "Households with disabled household members less likely to own property"
+message(keymessage)
+```
+
+```{r chart4_9}
+
+subtitle <- "Proportion of households with property wealth by whether there are disabled household members, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that owned property, broken down by whether there were any disabled household members. 
+                      
+Households with disabled household members were less likely to own property. In ", params$data_period, ", only ", filter(tables4$table_9$rate, Group == "Someone disabled")[[params$data_period]], " of households with disabled household members owned property, whereas ", filter(tables4$table_9$rate, Group == "No-one disabled")[[params$data_period]], " of households with no disabled household members did. This gap had remained broadly stable over time.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts4[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables4[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables4[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of households with property wealth, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables4[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables4[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+#### Ethnicity
+
+```{r} 
+keymessage <- "Minority ethnic households less likely to own property"
+message(keymessage)
+```
+
+```{r chart4_10}
+
+subtitle <- "Proportion of households with property wealth by ethnicity of the household head, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that owned property, broken down by the ethnicity of the household head. 
+                      
+Households with a minority ethnic household head were less likely to own property. In ", params$data_period, ", ", filter(tables4$table_10$rate, Group == "Minority ethnic")[[params$data_period]], " of households with a minority ethnic household head owned property, whereas ", filter(tables4$table_10$rate, Group == "White British")[[params$data_period]], " of households with a White British household head did. While some of the estimates fluctuated a little over time, this gap had remained broadly stable.
+
+Note that minority ethnic households include white ethnic minorities such as EU citizens and gypsy/travellers. Note also that minority ethnic households are on average younger than White British households, and that the youngest households are also the least likely to own property. This can at least partly explain the gap.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts4[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables4[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables4[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of households with property wealth, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables4[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables4[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+#### Sex
+
+```{r} 
+keymessage <- "Male headed households more likely to own property"
+message(keymessage)
+```
+
+```{r chart4_11}
+
+subtitle <- "Proportion of households with property wealth by sex of the household head, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that owned property, broken down by whether the household heads were male or female. 
+                      
+In ", params$data_period, ", ", filter(tables4$table_11$rate, Group == "Male")[[params$data_period]], " of households with a male household head owned property, whereas only ", filter(tables4$table_11$rate, Group == "Female")[[params$data_period]], " of households with a female household head did. This gap was consistent over time.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts4[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables4[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables4[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of households with property wealth, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables4[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables4[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+#### Rural
+
+```{r} 
+keymessage <- "Urban and rural households similarly likely to own property"
+message(keymessage)
+```
+
+`r infobox("Note that the Wealth and Assets Survey is not representative of areas north of the Caledonian Canal and the Scottish islands. Therefore, some of the most remote areas in Scotland are not included. Urban/rural breakdowns therefore require careful interpretation.")`
+
+```{r chart4_12}
+
+subtitle <- "Proportion of households with property wealth in urban and rural areas, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that owned property, broken down by whether they were in urban or rural areas. 
+                      
+In ", params$data_period, ", ", filter(tables4$table_12$rate, Group == "Urban")[[params$data_period]], " of urban households owned property, only slightly less than the ", filter(tables4$table_12$rate, Group == "Rural")[[params$data_period]], " of households in rural areas. While some of the estimates fluctuated a little over time, these levels had remained broadly stable over time.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts4[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables4[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables4[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of households with property wealth, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables4[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables4[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```
+
+#### Children
+
+```{r} 
+keymessage <- "Households with and without children equally likely to own property"
+message(keymessage)
+```
+
+```{r chart4_13}
+
+subtitle <- "Proportion of households with property wealth by whether there are dependent
+children living in the household, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the proportion of households that owned property, broken down by whether there were dependent children living in the household. 
+                      
+In ", params$data_period, ", ", filter(tables4$table_13$rate, Group == "With children")[[params$data_period]], " of households with children owned property, similar to the ", filter(tables4$table_13$rate, Group == "No children")[[params$data_period]], " of households without any children. Whether or not there were any children in the household did not affect property ownership rates.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts4[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables4[[paste0("table_", id)]]$rate,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables4[[paste0("table_", id)]]$composition,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Composition of households with property wealth, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables4[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table4 <- datatable(data = tables4[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "d"),
+            caption = paste0("Table ", fign, "d: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3, table4))
+
+```

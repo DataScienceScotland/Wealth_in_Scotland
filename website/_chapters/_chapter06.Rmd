@@ -1,0 +1,175 @@
+## Data source
+
+The analysis in this report is based on data from the Wealth and Assets Survey (WAS). This survey measures the economic well-being of households in Great Britain. `r abbr("WAS", "Wealth and Assets Survey")` is managed by the Office for National Statistics (ONS).
+
+`r abbr("WAS", "Wealth and Assets Survey")` is a sample survey and any numbers shown here are estimates only and could be slightly higher or lower if we interviewed a different sample of the population. Therefore, small changes over time, or differences between groups may not be real in the population. Differences or trends are more likely to be real if they are consistent over time.
+
+The microdata is available through the [`r abbr("UK", "United Kingdom")` Data Service](https://beta.ukdataservice.ac.uk/datacatalogue/series/series?id=2000056).
+
+### Population coverage
+
+The survey has a large sample size and almost complete coverage of Great Britain. The sample of private households in Scotland however excludes households north of the Caledonian Canal and the Scottish islands. Any estimates may therefore not necessarily be representative of households north of the Caledonian Canal and on the Scottish islands. And since some of the most remote areas in Scotland are not included, urban/rural breakdowns require particularly careful interpretation.
+
+### Survey period
+
+```{r}
+year1 <- str_split(params$data_period, "-")[[1]][1]
+year2 <- str_split(params$data_period, "-")[[1]][2]
+```
+
+Data is collected over waves of two years, with the first wave data collected between July 2006 to June 2008. The latest estimates are based on data collected from April `r year1` to March `r year2`.
+
+The survey period changed from a June-July pattern to an April-March pattern in 2014. Therefore, estimates for 2012-2014 and for 2014-2016 are both based on data from a partially overlapping time period (April to June 2014).
+
+### Inflation adjustment {#inflation-adjustment-definition}
+
+Wealth estimates have been deflated to April `r year1` to March `r year2` prices using the `r abbr("ONS", "Office for National Statistics")` [Consumer Prices Index including owner occupiers' housing costs (CPIH)](https://www.ons.gov.uk/datasets/cpih01/editions/time-series/versions/17). The table below shows the deflators used for each period. These were calculated as the mean of the monthly overall index across each data collection period and then scaled to the latest period.
+
+```{r}
+
+title <- "Inflation adjustment for each period"
+source <- "Source: ONS Consumer Prices Index including owner occupiers' housing costs"
+fign <- fign + 1
+
+data <- tribble(~Period, ~Deflator,
+                "Wave 1 - July 2006 to June 2008",   1.29,
+                "Wave 2 - July 2008 to June 2010",   1.22,
+                "Wave 3 - July 2010 to June 2012",   1.15,
+                "Wave 4 - July 2012 to June 2014",   1.09,
+                "Round 5 - April 2014 to March 2016", 1.07,
+                "Round 6 - April 2016 to March 2018", 1.04,
+                "Round 7 - April 2018 to March 2020", 1.00)
+  
+datatable(data = data, 
+          id = paste0("table-", fign),
+          caption = paste0("Table ", fign, ": ", title),
+          source = source,
+          options = list(rowHeaders = TRUE))
+
+```
+
+### Household income {#household-income-definition}
+
+Household income is used in this report for these purposes:
+
+- to compare wealth and income inequality
+- for breakdowns by income bands
+- to calculate poverty lines for the financial vulnerability measure
+
+The poverty lines are calculated using data from the Department for Work and Pensions' Family Resources Survey, the data source of the official poverty statistics. All other income information comes from `r abbr("WAS", "Wealth and Assets Survey")`.
+
+Household income is net disposable income from all sources adjusted for household size [using the modified OECD equivalence scale](https://www.gov.scot/publications/poverty-in-scotland-methodology/pages/income-equivalisation/).
+
+## Definitions
+
+### Total wealth {#total-wealth-definition}
+
+Total wealth refers to the personal wealth of households and is made up of financial, physical, property and pension wealth of all household members. Business assets are currently not part of this definition.
+
+### Financial wealth {#financial-wealth-definition}
+
+Financial wealth (net financial wealth) is calculated as the sum of all financial assets (such as bank accounts, savings accounts, stocks and shares) minus all liabilities (such as overdrafts, loans, credit card debt, and arrears on household bills). These can be formal assets, such as savings accounts or loans from banks, or informal assets, such as money held at home, or borrowing from friends and family.
+
+### Physical wealth {#physical-wealth-definition}
+
+Physical wealth (gross physical wealth) is the value of household goods such as appliances, computers, televisions, jewellery, collectables, vehicles, personal number plates, and other valuables. The valuations are derived from respondents’ own estimates of the value of items. Any borrowing to finance such purchases is not included in this estimate (borrowing is included in net financial wealth).
+
+### Property wealth {#property-wealth-definition}
+
+Property wealth (net property wealth) is the value of all property owned (the main residence and any other property owned) less any debt on the property (e.g. mortgage) and equity release. It is derived from respondents’ own valuations of their properties, rather than any survey valuation.
+
+### Pension wealth {#pension-wealth-definition}
+
+Pension wealth is an estimate of the value of wealth held in private (non-state) pension schemes, expressed as an equivalent ‘pot of money’. It comprises occupational and personal pensions and includes pensions of public sector workers. The estimate is based only on the pension rights accumulated to date and does not include rights which may be built up in future.
+
+The most common private pension schemes are:
+
+- occupational defined contribution pensions
+- personal pensions
+- occupational defined benefit pensions
+
+For the first two, benefits are determined by the contributions paid into the scheme, the investment return on those contributions and the type of annuity (if any) purchased upon retirement. For the last one, the benefits to be paid are salary related and based on number of years of pensionable service and accrual rate.
+
+More detail about how pension values are determined and current trends in pension schemes and distributions can be found in the `r abbr("ONS", "Office for National Statistics")` [Pension Wealth in Great Britain publication](https://www.ons.gov.uk/peoplepopulationandcommunity/personalandhouseholdfinances/incomeandwealth/bulletins/pensionwealthingreatbritain/april2016tomarch2018).
+
+### Automatic enrolment {#automatic-enrolment-definition}
+
+Under reforms brought in by the Pensions Act 2008, with updates in the Pensions Acts 2011 and 2014, automatic enrolment was introduced in October 2012 stating employers must enrol all eligible employees (who are not already participating in a qualifying workplace pension scheme) into a qualifying workplace private pension. Staged automatic enrolment is based on the size of the employer’s Pay As You Earn (PAYE) scheme and began in October 2012 with larger employers and completed in 2018. Workers can opt out but will be re-enrolled every three years.
+
+### Individual wealth {#individual-wealth-definition}
+
+Household wealth is made up of all household members' individual wealth (such as pension wealth) plus any wealth held commonly, for example joint property or joint accounts. Where we report on individual wealth, we split commonly owned wealth out among household members. [Detailed information on measuring wealth at an individual level](https://www.ons.gov.uk/peoplepopulationandcommunity/personalandhouseholdfinances/incomeandwealth/methodologies/measuringwealthonanindividuallevel) is available from `r abbr("ONS", "Office for National Statistics")`.
+
+### Household head {#household-head-definition}
+
+In this report, we use the term 'household head' for the household representative person. This is the adult with the highest income in the household, or if adults have the same income, the oldest adult.
+
+### Dependent children {#dependent-child-definition}
+
+In this publication, ‘child’ refers to a dependent child. A dependent child is a person aged 0-15, or a person aged 16-19 and: not married nor in a Civil Partnership nor living with a partner, and living with their parents, and in full-time non-advanced education or in unwaged government training.
+
+### Lone parents {#lone-parents-definition}
+
+Family types are becoming increasingly complex. In this publication, ‘lone parents’ refer to a situation where the primary residence of a dependent child is in a household with one adult. This household type does not necessarily imply that the child only has contact with one parent. The child may have non-resident parents who contribute to their welfare.
+
+### Medians
+
+Median wealth is the wealth of the middle person (or middle household) if all people (or households) were ordered by the amount of their wealth.
+
+## More information
+
+The methodology used for producing statistical estimates of wealth and debt in this report is based on the methodology used by the Office for National Statistics for the [Wealth in Great Britain National Statistics publication series](https://www.ons.gov.uk/peoplepopulationandcommunity/personalandhouseholdfinances/incomeandwealth/bulletins/totalwealthingreatbritain/april2018tomarch2020). Further detail on methodology can be found on ONS’s webpages.
+
+### Previous reports
+
+Previous Wealth in Scotland reports are available:
+
+- [Wealth in Scotland 2006-2018](./2020report.html)
+- [Wealth in Scotland 2006-2014](https://www.gov.scot/publications/wealth-assets-scotland-2006-2014/)
+- [Wealth in Scotland 2006-2012](https://www.gov.scot/publications/wealth-assets-scotland-2006-2012/)
+- [Wealth in Scotland 2006-2010](https://www.gov.scot/publications/wealth-and-assets-in-scotland-2006-2010/)
+
+Previous `r abbr("ONS", "Office for National Statistics")` Wealth in Great Britain reports are available:
+
+- [Total wealth in Great Britain series](https://www.ons.gov.uk/peoplepopulationandcommunity/personalandhouseholdfinances/incomeandwealth/bulletins/totalwealthingreatbritain/previousReleases)
+
+## Official Statistics
+
+Official and National Statistics are produced to high professional standards set out in the Code of Practice for Official Statistics. Both undergo regular quality assurance reviews to ensure that they meet customer needs and are produced free from any political interference.
+
+### Access source data
+
+The data collected for this statistical bulletin cannot be made available by Scottish Government for further analysis, as the Scottish Government is not the data controller. However, the data controller (Office for National Statistics) are making the data available through the [`r abbr("UK", "United Kingdom")` Data Service](https://beta.ukdataservice.ac.uk/datacatalogue/series/series?id=2000056).
+
+### Contact {#contact}
+
+For enquiries about this publication please contact the lead statistician.
+
+Maike Waldmann<br>
+Communities Analysis Division
+
+#### Email
+
+social-justice-analysis@gov.scot
+
+#### Address
+
+The Scottish Government<br>
+Communities Analysis Division<br>
+Area 2H North<br>
+Victoria Quay<br>
+Edinburgh EH6 6QQ
+
+#### Phone
+
+0131 244 5851<br>
+
+If you would like to be consulted about statistical collections or receive notification of publications, please register your interest at [ScotStat](https://www.gov.scot/publications/scotstat-register-guidance/).
+
+Details of [forthcoming publications](https://www.gov.scot/publications/official-statistics-forthcoming-publications/) are regularly published.
+
+### Crown Copyright
+
+You may use or re-use this information (not including logos) free of charge in any format or medium, under the terms of the [Open Government Licence](http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/).
+
+

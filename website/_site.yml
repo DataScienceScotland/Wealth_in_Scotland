@@ -1,0 +1,12 @@
+
+name: "Wealth in Scotland"
+output:
+  bookdown::html_document2:
+    fig_width: 7
+    fig_height: 3
+    number_sections: false
+    mathjax: NULL
+    template: _template.html
+    css: styles22.css
+    includes:
+      after_body: _footer.html

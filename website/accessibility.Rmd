@@ -1,0 +1,53 @@
+---
+title: "Accessibility"
+lang: "en"
+description: "Accessibility information for the content of the data.gov.scot\/wealth webpages, including the official wealth statistics for Scotland."
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE
+)
+
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+```
+
+```{r}
+source("R/00_functions.R")
+```
+
+This website is run by the Scottish Government. We want it to be accessible and usable for as many people as possible.
+
+## Feedback
+
+[Contact us](./index.html#contact) if you:
+
+- Cannot access any part of this site or want to report an accessibility problem.
+- Need information on this website in a different format. Such as accessible PDF, large print, easy read, audio recording or braille. We’ll consider your request and get back to you as soon as we can.
+
+### Enforcement
+
+If you’re not happy with how we respond to your feedback, contact the [Equality Advisory and Support Service](https://www.equalityadvisoryservice.com/). They are an independent advice service. They will advise you on what to do next.
+
+## Compliance
+
+Scottish Government is committed to making its websites accessible, in accordance with the [Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018](https://www.legislation.gov.uk/uksi/2018/952/regulation/4/made).
+
+This accessibility statement applies to the [data.gov.scot/wealth](./) webpages.
+
+### Compliance status
+
+We believe that this website is compliant with the regulations. This is based on a non-expert assessment using [`r abbr("WCAG", "Web Content Accessibility Guidelines")` 2.1 success criteria and techniques](https://www.w3.org/WAI/WCAG21/quickref/).
+
+### Potentially non-accessible content
+
+The content listed below is compliant with the regulations, and yet may not be fully accessible:
+
+- The charts may be difficult to explore in detail using screen readers and other assistive tools.
+- Some of the text is complex.
+
+## Preparation of statement
+
+This statement was prepared on 3 February 2022.

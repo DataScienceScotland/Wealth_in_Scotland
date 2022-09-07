@@ -1,0 +1,1102 @@
+## Wealth inequality
+
+```{r}
+id <- 0
+fign <- length(tables1)
+```
+
+This chapter shows how wealth is distributed within the population overall, and between different groups. The first section looks at how much more the wealthiest households have compared to the least wealthy. Using a range of summary measures, we look at how wealth inequality differs for the four different components of total wealth, and how this has changed over the years. The second section compares average wealth across different types of people and households to show which groups typically have more or less wealth than others.
+
+Wealth inequality in Scotland is also monitored within Scotland’s [National Performance Framework](https://nationalperformance.gov.scot/) using the [Gini coefficient](#inequality-trends) of wealth inequality.
+
+### Within the population
+
+When looking at wealth inequality within the population, we typically use inequality measures such as the Gini coefficient or the Palma ratio. These compare all households by how much wealth they have.
+
+#### Distribution {.tabset}
+
+```{r}
+keymessage <- "Wealth is more unequally distributed than income"
+message(keymessage)
+
+fig1 <- tables2$table_1$median %>% tail(1L) %>% select(Income) %>% pull()
+fig2 <- tables2$table_1$median %>% tail(1L) %>% select(Wealth) %>% pull()
+fig3 <- tables2$table_1$median %>% head(1L) %>% select(Income) %>% pull()
+fig4 <- tables2$table_1$median %>% head(1L) %>% select(Wealth) %>% pull()
+
+# round
+fig1 <- percent2(as.numeric(str_remove(fig1, "%"))/100, 2)
+fig2 <- percent2(as.numeric(str_remove(fig2, "%"))/100, 2)
+fig3 <- percent2(as.numeric(str_remove(fig3, "%"))/100, 2)
+fig4 <- percent2(as.numeric(str_remove(fig4, "%"))/100, 2)
+
+```
+
+Discussion on inequality often focuses on income, but wealth is even more unequally distributed than income.
+
+```{r chart2_1}
+
+subtitle <- paste0("Share of total wealth (negative wealth set to zero) and of total household income in each 2% wealth / income band, Scotland ", params$data_period)
+
+description <- paste0("Figure ", fign + 1, " splits Scotland’s households into fifty equal-sized groups, which are sorted by income and wealth on the horizontal axis, with each bar representing 2% of households. Lower income / less wealthy households are on the left, and richer / wealthier households are on the right. The height of the bars shows each group’s share of total income / wealth.
+
+The 2% top income households in Scotland had ", fig1, " of all income, but the wealthiest 2% of all households in Scotland had ", fig2, " of all wealth. On the other end, the bottom 2% households had ", fig3, " of all income, and practically none of the wealth.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts2[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables2[[paste0("table_", id)]]$median,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey and Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables2[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Sample sizes, Scotland ", params$data_period),
+            source = "Source: Wealth and Assets Survey and Family Resources Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2))
+
+```
+
+##### How much wealth?
+
+```{r}
+
+fig1 <- as.numeric(str_remove_all(tables2$table_2$median[["10"]], "[£,]"))
+fig1 <- paste0("£", round2(fig1/1000000, 1))
+
+keymessage <- paste0("The wealthiest households had on average ", fig1, " million in total wealth and the least wealthy ", tables2$table_2$median[["1"]])
+
+message(keymessage)
+
+```
+
+```{r chart2_2}
+
+subtitle <- paste0("Median household wealth by wealth decile, Scotland ", params$data_period)
+
+description <- paste0("Figure ", fign + 1, ", the wealth distribution, splits all households in Scotland into ten equal-sized groups (called deciles), sorted by household wealth, from the least wealthy on the left, to the wealthiest on the right. The chart shows the wealth of a typical household in each decile group, or the decile medians.
+
+A typical household in the top decile of the household population had ", fig1, " million, whereas a typical household in the bottom decile had ", tables2$table_2$median[["1"]], " in total wealth.
+
+Note that the least wealthy households are unlikely to own property or have any pension savings. Most of their wealth is also not cash or savings, but rather physical wealth, the value of possessions such as clothing or furniture.")
+
+id <- id + 1
+fign <-  fign + 1
+
+interactive(charts2[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables2[[paste0("table_", id)]]$median,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+  
+table2 <- datatable(data = tables2[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Median age of household head, Scotland ", params$data_period),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables2[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Sample sizes, Scotland ", params$data_period),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3))
+
+```
+
+##### Trends
+
+```{r}
+keymessage <- "Wealth increased in all deciles"
+message(keymessage)
+```
+
+```{r chart2_3}
+
+subtitle <- "Median (inflation-adjusted) household wealth by wealth decile, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows how median household wealth in each wealth decile changed over time. Median wealth had increased in all wealth deciles since 2006-2008, when data collection began. However, wealth in the middle wealth decile had increased only very little.")
+
+id <- id + 1
+fign <-  fign + 1
+
+interactive(charts2[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle,
+            height = 4)
+
+table1 <- datatable(data = tables2[[paste0("table_", id)]]$median,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+  
+table2 <- datatable(data = tables2[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table3 <- datatable(data = tables2[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3))
+
+```
+
+#### Life stages
+
+```{r}
+keymessage <- "Younger households often amongst the less wealthy"
+message(keymessage)
+```
+
+```{r chart2_4}
+
+subtitle <- paste0("Share of age groups (age of household head) in each wealth decile, Scotland  ", params$data_period)
+
+description <- paste0("Note again that people's wealth generally increases over their lifetime. Figure ", fign + 1, " shows the age breakdown of each wealth decile. Younger households are more often found in the lower wealth deciles, whereas middle-aged and older households are often found in the higher wealth deciles.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts2[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle,
+            height = 4.5)
+
+table1 <- datatable(data = tables2[[paste0("table_", id)]]$share,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+  
+table2 <- datatable(data = tables2[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Sample sizes, Scotland ", params$data_period),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+  
+tables_panel(div(table1, table2))
+
+```
+
+#### Inequality trends {.tabset}
+
+Summary measures of wealth inequality are useful for tracking change over time. In this section, we use a range of summary measures to describe different features of the wealth distribution:
+
+- The Gini coefficient of inequality is widely used, and it is based on the whole distribution. But it is sometimes considered overly sensitive to changes in the middle, and not sensitive enough to changes at the top and the bottom.
+- The Palma ratio focuses on the top and the bottom of the distribution only. In practice, both Gini and Palma measures show very similar trends.
+- Wealth shares give a more nuanced picture of the different parts of the distribution, but they cannot be summarised with a single estimate.
+- The absolute wealth gap shows the wealth difference between the wealthiest and the least wealthy in absolute terms.
+
+The Gini and Palma measures appear to show a recent small rise in wealth inequality after a previous decline. But these changes are small compared to the measurement uncertainty. They may therefore be due to random variation in the survey samples drawn in each period and may not reflect trends in the overall population. In a similar way, the wealth share measures show some patterns that are too weak to describe a clear trend. However, the absolute wealth gap between the least wealthy and the wealthiest is increasing, making it ever more difficult to attain high wealth compared to the rest of society.
+
+##### Gini
+
+```{r}
+keymessage <- "Wealth inequality broadly stable"
+message(keymessage)
+```
+
+```{r chart2_5}
+
+subtitle <- "Gini coefficient of wealth inequality, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows how the Gini coefficient of wealth inequality changed over time. The Gini coefficient ranges from 0% to 100%. 0% means all households have the same wealth, and 100% means one household has all the wealth and all other households have none.
+
+The Gini coefficient of total wealth was ", tables2$table_5$measure[[params$data_period]], " in ", params$data_period,". It had been broadly stable since 2006-2008, when data collection began, ranging between ", tables2$table_5$measure[["2014-2016"]], " and ", tables2$table_5$measure[["2006-2008"]], ".")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts2[[paste0("chart_", id)]], 
+            description = description,
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables2[[paste0("table_", id)]]$measure,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+  
+table2 <- datatable(data = tables2[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2))
+
+```
+
+##### Palma
+
+```{r}
+keymessage <- "Wealth inequality broadly stable"
+message(keymessage)
+```
+
+```{r chart2_6}
+
+subtitle <- "Palma ratio of wealth inequality, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows how the Palma ratio of wealth inequality changed over time. The Palma ratio divides the combined wealth of the 10% wealthiest households by the combined wealth of the 40% least wealthy households.
+
+The Palma ratio of total wealth was ", tables2$table_6$measure[[params$data_period]], " in ", params$data_period,". It had been broadly stable since 2006-2008, when data collection began, ranging between ", tables2$table_6$measure[["2010-2012"]], " and ", tables2$table_6$measure[["2006-2008"]], ".")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts2[[paste0("chart_", id)]], 
+            description = description,
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables2[[paste0("table_", id)]]$measure,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+  
+table2 <- datatable(data = tables2[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2))
+
+```
+
+##### Shares
+
+```{r}
+keymessage <- "Wealth shares broadly stable"
+message(keymessage)
+```
+
+```{r chart2_7}
+
+subtitle <- "Share of total wealth of the 40% least wealthy, the middle 50%, the 10% wealthiest and the 1% wealthiest households, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows how much combined wealth the least wealthy 40%, the middle 50%, and the wealthiest 10% have as a share of all wealth, and how that has changed over time. It also shows the share of the wealthiest 1%. 
+
+The middle 50% combined had roughly half of all wealth in ", params$data_period, " (", tables2$table_7$measure[[params$data_period]][2], "). The 10% wealthiest households had a share of ", tables2$table_7$measure[[params$data_period]][3], " of all wealth, and the least wealthy 40% had a share of ", tables2$table_7$measure[[params$data_period]][1]," of all wealth. 
+
+Previously, it appeared that the share of the top 10% had slightly decreased between 2006-2008 (when data collection began) and 2010-2012 and had since slightly increased. The share of the bottom 10% remained stable throughout the whole time series. As a result, the Palma ratio also initially appeared to decline and then increase again. However, the top 10% households are based on a small, diverse sample, and measurement uncertainty is therefore large for this group. Small changes in the sample may not reflect real changes in wealth inequality in the population.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts2[[paste0("chart_", id)]], 
+            description = description,
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables2[[paste0("table_", id)]]$measure,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+  
+table2 <- datatable(data = tables2[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2))
+
+```
+
+##### Gap
+
+```{r}
+keymessage <- "Absolute wealth gap increasing"
+message(keymessage)
+```
+
+```{r}
+
+fig1 <- as.numeric(str_remove_all(tables2$table_8$measure[[params$data_period]], "[£,]"))
+fig1 <- paste0("£", round2(fig1/1000000, 1))
+
+fig2 <- as.numeric(str_remove_all(tables2$table_8$measure[["2006-2008"]], "[£,]"))
+fig2 <- paste0("£", round2(fig2/1000000, 1))
+
+```
+
+```{r chart2_8}
+
+subtitle <- "Absolute (inflation-adjusted) wealth gap between the wealthiest 10% and the least wealthy 40%, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows the absolute gap between median wealth of the wealthiest 10% and the least wealthy 40%, and how this changed over time. This gap shows how much more wealth a typical household in the bottom 40% would need to build in order to move into the top 10% of the distribution.
+
+In ", params$data_period, ", a typical household in the wealthiest 10% had ", fig1, " million more wealth than a typical household in the least wealthy 40%. This had steadily increased from ", fig2, " million in 2006-2008.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts2[[paste0("chart_", id)]], 
+            description = description,
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables2[[paste0("table_", id)]]$measure,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+  
+table2 <- datatable(data = tables2[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2))
+
+```
+
+
+#### Types of wealth
+
+Here, we use the Gini coefficient for comparing inequality across different types of wealth.
+
+```{r}
+keymessage <- "Financial wealth least equally distributed type of wealth"
+message(keymessage)
+```
+
+```{r chart2_9}
+
+subtitle <- "Gini coefficient of wealth inequality by type of wealth, Scotland"
+
+description <- paste0("While the Gini coefficient of wealth inequality for total wealth overall was ", filter(tables2$table_9$measure, Type == "Total")[[params$data_period]], ", there are differences for different types of wealth. Figure ", fign + 1, " shows the Gini coefficient for each of the four components of personal wealth. 
+
+Inequality was highest for financial wealth (", filter(tables2$table_9$measure, Type == "Financial")[[params$data_period]], "), followed by pension wealth (", filter(tables2$table_9$measure, Type == "Pension")[[params$data_period]], ") and property wealth (", filter(tables2$table_9$measure, Type == "Property")[[params$data_period]], "), and lowest for physical wealth (", filter(tables2$table_9$measure, Type == "Physical")[[params$data_period]], "). For context, wealth inequality for all types of wealth was higher than income inequality: the Gini coefficient of income inequality (before housing costs) in Scotland was 32% in 2017-20, see [Poverty in Scotland report](https://data.gov.scot/poverty/#Income_inequality).
+
+Note that the Gini coefficient as calculated here includes all households, whether or not they have each type of wealth.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts2[[paste0("chart_", id)]], 
+            description = description,
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables2[[paste0("table_", id)]]$measure,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+  
+table2 <- datatable(data = tables2[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2))
+
+```
+
+### Between groups
+
+Some people are more likely to be wealthy than others - for example, most adults nearing retirement have accumulated a considerable amount of wealth over their working lives, and are getting ready to use it up, whereas many younger adults are only starting to save. 
+
+While this growth of wealth over time and with age is very common, some groups of the population are excluded from it. They may not have any income to spare for saving up, or they cannot afford to get on the property ladder, or they are not enrolled in any private pension scheme.
+
+This section compares average wealth across different types of people and households to show which groups typically have more or less wealth than others. For context, we also provide age information, as age often explains at least part of the difference between groups. 
+
+We also include time series to show whether differences between groups are consistent over time. Where this is the case, we can be more confident that differences are real in the whole population and not just in this particular sample. Note that any drastic changes from one period to the next are likely due to random variation, and do not reflect real change in the population.
+
+The [`r abbr("ONS", "Office for National Statistcs")` report on individual wealth](https://www.ons.gov.uk/peoplepopulationandcommunity/personalandhouseholdfinances/incomeandwealth/bulletins/distributionofindividualtotalwealthbycharacteristicingreatbritain/april2018tomarch2020) looks in more detail at wealth by a range of (interacting) characteristics.
+
+#### Individual characteristics {.tabset}
+
+`r infobox("Some of the breakdowns below may not be based on the full Scottish sample. This is because we excluded a small number of individuals where the breakdown characteristic was unknown.")`
+
+We created an individual wealth measure to show average wealth differences for individuals with different characteristics. In this measure, any commonly owned wealth is split out among the household members, see the [individual wealth definition](#individual-wealth-definition) for more details. Individual wealth estimates are available from 2010-2012.
+
+Age, economic status, and (formal) qualification are the most important characteristics linked to wealth differences between individuals. Of these, age is key, as people build wealth over their lifetimes.
+
+Other individual characteristics show smaller, less obvious, or no wealth differences. They are included here to demonstrate which characteristics influence wealth less, or less clearly. While we tried to include all protected characteristics, data on gender reassignment and trans status is not available.
+
+A typical adult had `r filter(tables2$table_13$median, Group == "All")[[params$data_period]]` of total wealth in `r params$data_period`.
+
+##### Age
+
+```{r}
+keymessage <- "Youngest people the least wealthy, those near retirement age wealthiest"
+message(keymessage)
+```
+
+```{r chart2_10}
+
+subtitle <- "Median (inflation-adjusted) individual wealth by age, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows median wealth by age. 
+                      
+The youngest people were the least wealthy, and those recently retired, or about to retire, the wealthiest. For example, a typical person in the 65-74 year-old group had ", filter(tables2$table_10$median, Group == "65-74")[[params$data_period]], " in total wealth in ", params$data_period, ", whereas a typical 16-34 year-old had only ", filter(tables2$table_10$median, Group == "16-34")[[params$data_period]], ".")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts2[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables2[[paste0("table_", id)]]$median,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables2[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Median age, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+  
+table3 <- datatable(data = tables2[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3))
+
+```
+
+##### Employment
+
+```{r}
+
+keymessage <- "Retired adults wealthiest, other inactive and unemployed the least wealthy"
+message(keymessage)
+
+```
+
+```{r chart2_11}
+
+subtitle <- "Median (inflation-adjusted) individual wealth of adults by economic status, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows median wealth by economic status. 
+                      
+Retired adults were the wealthiest, while other inactive and unemployed adults were the least wealthy. In ", params$data_period, ", a typical retiree had ", filter(tables2$table_11$median, Group == "Retired")[[params$data_period]], " in total wealth, compared to employed or self-employed adults, who had ", filter(tables2$table_11$median, Group == "Employed")[[params$data_period]], " and ", filter(tables2$table_11$median, Group == "Self-employed")[[params$data_period]], ", respectively, which was a lot more than what inactive (but not retired) and unemployed adults had (inactive - other ", filter(tables2$table_11$median, Group == "Inactive - other")[[params$data_period]], ", inactive - student ", filter(tables2$table_11$median, Group == "Inactive - student")[[params$data_period]], ", inactive - disabled ", filter(tables2$table_11$median, Group == "Inactive - disabled")[[params$data_period]], ", and unemployed ", filter(tables2$table_11$median, Group == "Unemployed")[[params$data_period]], ").
+
+Economic status data was available from 2014-2016.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts2[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables2[[paste0("table_", id)]]$median,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables2[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Median age, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+  
+table3 <- datatable(data = tables2[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3))
+
+```
+
+##### Education
+
+```{r} 
+
+keymessage <- "Highly qualified adults wealthier"
+message(keymessage)
+
+```
+
+```{r chart2_12}
+
+subtitle <- "Median (inflation-adjusted) individual wealth of adults by qualification, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows median wealth by formal qualification. 
+                      
+Highly qualified adults were wealthier than adults with qualifications below degree-level or with no formal qualification at all. In ", params$data_period, ", a typical adult with a degree-level or higher qualification had ", filter(tables2$table_12$median, Group == "Degree-level or above")[[params$data_period]], " in total wealth, compared to ", filter(tables2$table_12$median, Group == "Other qualification")[[params$data_period]], " for adults with another type of qualification, and ", filter(tables2$table_12$median, Group == "No qualification")[[params$data_period]], " for adults with no formal qualification.
+
+Table ", fign + 1, "b shows that a typical adult with no formal qualification was in their early sixties, an age group where adults tend to be the wealthiest in their lives, and yet these non-qualified adults are not very wealthy. This underlines how important education and having formal qualifications were for being able to build wealth.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts2[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables2[[paste0("table_", id)]]$median,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables2[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Median age, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+  
+table3 <- datatable(data = tables2[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3))
+
+
+```
+
+##### Marital
+
+```{r}
+
+keymessage <- "Married adults wealthiest, singles least wealthy"
+message(keymessage)
+
+```
+
+```{r chart2_13}
+
+subtitle <- "Median (inflation-adjusted) individual wealth of adults by marital status, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows median wealth by marital status. 
+                      
+Married and widowed adults were the wealthiest, whereas single (and never married) adults were the least wealthy. Note that we include adults in Civil Partnerships in the 'Married' category, and we include separated married adults and those who dissolved their Civil Partnership in the 'Divorced' category. 
+
+In ", params$data_period, ", a typical married adult had ", filter(tables2$table_13$median, Group == "Married")[[params$data_period]], " and a typical widowed adult ",  filter(tables2$table_13$median, Group == "Widowed")[[params$data_period]], " in total wealth. A divorced adult had ", filter(tables2$table_13$median, Group == "Divorced")[[params$data_period]], ", and cohabiting and single adults had ", filter(tables2$table_13$median, Group == "Cohabiting")[[params$data_period]], ", and ", filter(tables2$table_13$median, Group == "Single")[[params$data_period]], ", respectively. The typical single adult was quite young, see table ", fign + 1, "b, which can at least partly explain the lower wealth. This is similar for cohabiting adults, who also tended to be slightly younger than married, divorced and widowed adults.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts2[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables2[[paste0("table_", id)]]$median,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables2[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Median age, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+  
+table3 <- datatable(data = tables2[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3))
+
+```
+
+##### Orientation
+
+```{r}
+
+keymessage <- "No consistent wealth difference for adults of different sexual orientations"
+message(keymessage)
+
+```
+
+`r infobox("Only adults who responded to the survey in person were included in the sexual orientation breakdown. No proxy-responses are included. This reduced the sample size.")`
+
+```{r chart2_14}
+
+subtitle <- "Median (inflation-adjusted) individual wealth of adults by sexual orientation, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows median wealth by sexual orientation. 
+                      
+While in the latest period, straight (or heterosexual) adults had less total wealth than adults who were gay, lesbian, bisexual, or other, this had been the opposite in previous periods. In ", params$data_period, ", a typical adult who was gay, lesbian, bisexual or other had ", filter(tables2$table_14$median, Group == "Other")[[params$data_period]], " in total wealth, compared to ", filter(tables2$table_14$median, Group == "Hetero / straight")[[params$data_period]], " for straight adults.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts2[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables2[[paste0("table_", id)]]$median,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables2[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Median age, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+  
+table3 <- datatable(data = tables2[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3))
+
+```
+
+##### Religion
+
+```{r} 
+
+keymessage <- "Christian adults wealthiest (and oldest)"
+message(keymessage)
+
+```
+
+
+`r infobox("Only adults who responded to the survey in person were included in the religion breakdown. No proxy-responses are included. This reduced the sample size.")`
+
+```{r chart2_15}
+
+subtitle <- "Median (inflation-adjusted) individual wealth of adults by religion, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows median wealth by religion. 
+                      
+Christian adults continued to be wealthier on average than adults with other religions or no religion. In ", params$data_period, ", a typical Christian adult had ", filter(tables2$table_15$median, Group == "Christian")[[params$data_period]], " in total wealth, compared to ", filter(tables2$table_15$median, Group == "No religion")[[params$data_period]], " for adults with no religion and ", filter(tables2$table_15$median, Group == "Other religion")[[params$data_period]], " for adults with another religion.
+
+Note that Christian adults were also on average older and nearer their wealth peak around retirement compared to adults with another or no religion, see table ", fign + 1, "b.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts2[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables2[[paste0("table_", id)]]$median,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables2[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Median age, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+  
+table3 <- datatable(data = tables2[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3))
+
+```
+
+##### Ethnicity
+
+```{r} 
+keymessage <- "Minority ethnic adults younger and less wealthy"
+message(keymessage)
+
+```
+
+`r infobox("Only adults who responded to the survey in person were included in the ethnicity breakdown. No proxy-responses are included. This reduced the sample size.")`
+
+```{r chart2_16}
+
+subtitle <- "Median (inflation-adjusted) individual wealth of adults by ethnicity, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows median wealth by ethnicity. 
+
+In order to be able to produce an ethnicity breakdown, we combined all minority ethnic adults, including white ethnic minorities such as EU citizens and gypsy/travellers, into a single group.
+                      
+Minority ethnic adults were on average less wealthy than white British adults. In ", params$data_period, ", a typical minority ethnic adult had ", filter(tables2$table_16$median, Group == "Minority ethnic")[[params$data_period]], " in total wealth, compared to ", filter(tables2$table_16$median, Group == "White British")[[params$data_period]], " for a typical white British adult. Note that the minority ethnic adults were also younger on average than white British adults, see table ", fign + 1, "b.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts2[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables2[[paste0("table_", id)]]$median,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables2[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Median age, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+  
+table3 <- datatable(data = tables2[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3))
+
+```
+
+##### Disability
+
+```{r} 
+
+keymessage <- "Disabled people slightly less wealthy despite being older"
+message(keymessage)
+
+```
+
+```{r chart2_17}
+
+subtitle <- "Median (inflation-adjusted) individual wealth for adults by whether they are disabled, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows median wealth for disabled adults and adults who were not disabled. 
+
+While disabled adults had consistently had lower wealth compared to adults who were not disabled, the difference was small. In ", params$data_period, ", a typical disabled adult had ", filter(tables2$table_17$median, Group == "Disabled")[[params$data_period]], " in total wealth, compared to ", filter(tables2$table_17$median, Group == "Not disabled")[[params$data_period]], " for adults who were not disabled.
+
+However, disabled adults were on average older and closer to retirement, see table ", fign + 1, "b. We would therefore have expected them to be wealthier, and yet they are not. This suggests that disabled adults had been less able to build wealth compared to adults who were not disabled.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts2[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables2[[paste0("table_", id)]]$median,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables2[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Median age, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+  
+table3 <- datatable(data = tables2[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3))
+
+```
+
+
+##### Sex
+
+```{r}
+
+keymessage <- "Men and women similarly wealthy overall"
+message(keymessage)
+
+```
+
+```{r chart2_18}
+
+subtitle <- "Median (inflation-adjusted) individual wealth of adults by sex, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows median wealth for men and women. 
+
+Men and women had on average similar wealth. In ", params$data_period, ", a typical man had ", filter(tables2$table_18$median, Group == "Men")[[params$data_period]], " in total wealth, compared to ", filter(tables2$table_18$median, Group == "Women")[[params$data_period]], " for a typical woman.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts2[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            description = description,
+            subtitle = subtitle)
+
+table1 <- datatable(data = tables2[[paste0("table_", id)]]$median,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables2[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Median age, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+  
+table3 <- datatable(data = tables2[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3))
+
+```
+
+#### Household characteristics {.tabset}
+
+`r infobox("Some of the breakdowns below may not be based on the full Scottish sample. This is because we excluded a small number of households where the breakdown characteristic was unknown.")`
+
+In this section, we compare average household wealth by household characteristics. Household wealth is the combined wealth of all household members. We see the biggest differences when comparing households by income, household type, and housing tenure. We also show wealth differences in urban and rural areas. Data on area deprivation was not available.
+
+A typical household had `r tables1$table_1$median[[params$data_period]]` of total wealth in `r params$data_period`.
+
+##### Income
+
+```{r}
+
+keymessage <- "Highest income households the wealthiest"
+message(keymessage)
+
+```
+
+```{r chart2_19}
+
+subtitle <- "Median (inflation-adjusted) household wealth by household income quintile (or 20%-band), Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows median household wealth by household income quintile (or 20%-band). 
+                      
+The higher the household income, the wealthier the households were. In ", params$data_period, ", a typical household in the top income quintile had ", filter(tables2$table_19$median, Group == "5th (highest) household income quintile")[[params$data_period]], " in total wealth, compared to ", filter(tables2$table_19$median, Group == "4th")[[params$data_period]], ", ", filter(tables2$table_19$median, Group == "3rd")[[params$data_period]], ", and ", filter(tables2$table_19$median, Group == "2nd")[[params$data_period]], ", in the middle income quintiles, and ", filter(tables2$table_19$median, Group == "1st (lowest) household income quintile")[[params$data_period]], " in the lowest income quintile.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts2[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            subtitle = subtitle,
+            description = description,
+            height = 6)
+
+table1 <- datatable(data = tables2[[paste0("table_", id)]]$median,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables2[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+  
+table3 <- datatable(data = tables2[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3))
+
+```
+
+##### Household
+
+```{r}
+
+keymessage <- "Lone parents the least wealthy, pensioner couples wealthiest"
+message(keymessage)
+
+```
+
+```{r chart2_20}
+
+subtitle <- "Median (inflation-adjusted) household wealth by household type, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows median household wealth by household type. 
+                      
+Pensioner couple households had more than twice as much wealth as single pensioner households, and working-age couple households had more than twice as much wealth as working-age single households.
+
+In ", params$data_period, ", a typical pensioner couple household had ", filter(tables2$table_20$median, Group == "Pensioner couple")[[params$data_period]], " in total wealth, compared to ", filter(tables2$table_20$median, Group == "Single pensioner")[[params$data_period]], " for a single pensioner. A typical working-age couple with no dependent children had ", filter(tables2$table_20$median, Group == "Working-age couple")[[params$data_period]], ", and a typical childless working-age single ", filter(tables2$table_20$median, Group == "Single working-age")[[params$data_period]], ". A typical couple with children had ", filter(tables2$table_20$median, Group == "Couple with children")[[params$data_period]], " and a typical lone parent had ", filter(tables2$table_20$median, Group == "Lone parent")[[params$data_period]], " in total wealth.
+
+The main reason why couples had more than twice the wealth of single adults was that couples have on average lower living costs as they pool their resources. This enables them to use a larger share of their income to create additional wealth, for example by buying a home, or paying into a private pension scheme. 
+
+The 'Other' group contains households with additional adults such as non-dependent (grown-up) children or lodgers.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts2[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            subtitle = subtitle,
+            description = description,
+            height = 6)
+
+table1 <- datatable(data = tables2[[paste0("table_", id)]]$median,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables2[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+  
+table3 <- datatable(data = tables2[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3))
+
+```
+
+
+##### Tenure
+
+```{r} 
+
+keymessage <- "Home-owners wealthiest, renters least wealthy"
+message(keymessage)
+
+```
+
+```{r chart2_21}
+
+subtitle <- "Median (inflation-adjusted) household wealth by tenure, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows median household wealth by housing tenure. 
+                      
+Households who owned their homes outright were the wealthiest, whereas households in the social rented sector were the least wealthy. In ", params$data_period, ", a typical household who owned their home outright had ", filter(tables2$table_21$median, Group == "Owning outright")[[params$data_period]], " in total wealth, compared to ", filter(tables2$table_21$median, Group == "Buying with mortgage")[[params$data_period]], " for households who were buying their home with a mortgage, ", filter(tables2$table_21$median, Group == "Private renting")[[params$data_period]], " for households in the private rented sector, and ", filter(tables2$table_21$median, Group == "Social renting")[[params$data_period]], " of households in the social rented sector.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts2[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            subtitle = subtitle,
+            description = description,
+            height = 4)
+
+table1 <- datatable(data = tables2[[paste0("table_", id)]]$median,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables2[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+  
+table3 <- datatable(data = tables2[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3))
+
+```
+
+##### Rural
+
+```{r} 
+
+keymessage <- "Wealthier in rural areas"
+message(keymessage)
+
+```
+
+`r infobox("Note that the Wealth and Assets Survey is not representative of areas north of the Caledonian Canal and the Scottish islands. Therefore, some of the most remote areas in Scotland are not included. Urban/rural breakdowns therefore require careful interpretation.")`
+ 
+```{r chart2_22}
+
+subtitle <- "Median (inflation-adjusted) household wealth in urban and rural areas, Scotland"
+
+description <- paste0("Figure ", fign + 1, " shows median wealth for households in urban and in rural areas. 
+
+Rural households had consistently been wealthier compared to urban households. In ", params$data_period, ", a typical rural household had ", filter(tables2$table_22$median, Group == "Rural")[[params$data_period]], " in total wealth, compared to ", filter(tables2$table_22$median, Group == "Urban")[[params$data_period]], " for urban households.")
+
+id <- id + 1
+fign <- fign + 1
+
+interactive(charts2[[paste0("chart_", id)]], 
+            title = paste0("Figure ", fign, ": ", keymessage), 
+            subtitle = subtitle,
+            description = description,
+            height = 4)
+
+table1 <- datatable(data = tables2[[paste0("table_", id)]]$median,
+            id = paste0("table-", fign, "a"),
+            caption = paste0("Table ", fign, "a: ", subtitle),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+table2 <- datatable(data = tables2[[paste0("table_", id)]]$age,
+            id = paste0("table-", fign, "b"),
+            caption = paste0("Table ", fign, "b: Median age of household head, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+  
+table3 <- datatable(data = tables2[[paste0("table_", id)]]$sample,
+            id = paste0("table-", fign, "c"),
+            caption = paste0("Table ", fign, "c: Sample sizes, Scotland"),
+            source = "Source: Wealth and Assets Survey",
+            options = list(rowHeaders = TRUE))
+
+tables_panel(div(table1, table2, table3))
+
+```
+
+
+
