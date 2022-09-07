@@ -49,7 +49,6 @@ Each of the scripts above can also be run independently once the previous script
 ### Website files - content
 
 - website/index.Rmd
-
 - website/_chapters/_chapter00.Rmd
 - website/_chapters/_chapter01.Rmd
 - website/_chapters/_chapter02.Rmd
@@ -57,7 +56,6 @@ Each of the scripts above can also be run independently once the previous script
 - website/_chapters/_chapter04.Rmd
 - website/_chapters/_chapter05.Rmd
 - website/_chapters/_chapter06.Rmd
-
 - website/accessibility.Rmd
 
 ### Website files - structure
